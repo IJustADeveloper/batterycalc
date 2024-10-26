@@ -25,9 +25,9 @@ function WideForm({handleSubmit, buttonDisabled, powerW_and_El}){
             </tr>
 
             <tr>
-              <td className='td-left'><label htmlFor='cos-fi'>cos(fi):</label></td>
+              <td className='td-left'><label htmlFor='cos_fi'>cos(fi):</label></td>
               <td>[-]</td>
-              <td><input className='number-input' type='number' step='0.01' max='1' name='cos-fi' id='cos-fi' defaultValue={1}></input></td>
+              <td><input className='number-input' type='number' step='0.01' max='1' name='cos_fi' id='cos_fi' defaultValue={1}></input></td>
 
               <td className='td-left'><label htmlFor='groups'>Q групп</label></td>
               <td>[шт.]</td>
@@ -88,9 +88,9 @@ function SlimForm({handleSubmit, buttonDisabled, powerW_and_El}){
             </tr>
 
             <tr>
-              <td className='td-left'><label htmlFor='cos-fi'>cos(fi):</label></td>
+              <td className='td-left'><label htmlFor='cos_fi'>cos(fi):</label></td>
               <td>[-]</td>
-              <td><input className='number-input' type='number' step='0.01' max='1' name='cos-fi' id='cos-fi' defaultValue={1}></input></td>
+              <td><input className='number-input' type='number' step='0.01' max='1' name='cos_fi' id='cos_fi' defaultValue={1}></input></td>
             </tr>
 
             <tr>
@@ -167,10 +167,11 @@ function Form({setBatteries, setColumnClasses, windowWidth}) {
 
     formData.elements *= 6
     delete formData.submitButton
-    let powerW = formData['power'] * formData['cos-fi']
-    setPowerW_and_El([powerW, powerW * 100 * 1000 / (formData['groups'] * formData['elements'] * formData['efficiency'])])
-    
-    formData.power *= 1000    
+    let powerW = formData.power * formData.cos_fi * 1000
+    let power_el = powerW * 100 / (formData.groups * formData.elements * formData.efficiency)
+    formData.power_el = power_el
+
+    setPowerW_and_El([powerW/1000, power_el])
 
     setButtonDisabled(true)
     api.calcBatteries(formData).then(result => {let v_res = validation(result); setBatteries(v_res[0]); setColumnClasses(v_res[1]); setButtonDisabled(false);})

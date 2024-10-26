@@ -19,7 +19,7 @@ function Table({data, columnClasses={}, columnNames = null, windowWidth}){
             }
         }else{
             for (let i=0; i<columnNames.length; i++){
-                columns.push(<th value={'crack'} onClick={(event)=>{console.log(columnNames[i])}} key={'column:'+columnNames[i]}>{columnNames[i]}</th>)
+                columns.push(<th onClick={(event)=>{console.log(columnNames[i])}} key={'column:'+columnNames[i]}>{columnNames[i]}</th>)
             }
         }
         header = [<tr className='table-header' key={'header'}>{columns}</tr>]
