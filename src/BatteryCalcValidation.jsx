@@ -1,4 +1,4 @@
-function validation(data){
+function BatteryCalcValidation(data){
 
     let arr = data.data
 
@@ -17,4 +17,4 @@ function validation(data){
 }
 
 
-export default validation
+export default BatteryCalcValidation

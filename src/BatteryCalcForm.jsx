@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
 import Api from './Api.jsx'
-import validation from './validation.jsx';
+import BatteryCalcValidation from './BatteryCalcValidation.jsx';
 
 function WideForm({handleSubmit, buttonDisabled, powerW_and_El}){
   return (
@@ -19,13 +19,13 @@ function WideForm({handleSubmit, buttonDisabled, powerW_and_El}){
               <td>[кВА]</td>
               <td><input className='number-input' type='number' step='any' name='power' id='power'></input></td>
 
-              <td className='td-left'><label htmlFor='elements'>Q батарей (12В)</label></td>
+              <td className='td-left'><label htmlFor='bElements'>Q батарей (12В)</label></td>
               <td>[шт.]</td>
-              <td><input className='number-input' type='number' step='1' name='elements' id='elements'></input></td>
+              <td><input className='number-input' type='number' step='1' name='bElements' id='bElements'></input></td>
             </tr>
 
             <tr>
-              <td className='td-left'><label htmlFor='cos_fi'>cos(fi):</label></td>
+              <td className='td-left'><label htmlFor='cos_fi'>cos(fi)</label></td>
               <td>[-]</td>
               <td><input className='number-input' type='number' step='0.01' max='1' name='cos_fi' id='cos_fi' defaultValue={1}></input></td>
 
@@ -106,9 +106,9 @@ function SlimForm({handleSubmit, buttonDisabled, powerW_and_El}){
             </tr>
 
             <tr>
-              <td className='td-left'><label htmlFor='elements'>Q батарей (12В)</label></td>
+              <td className='td-left'><label htmlFor='bElements'>Q батарей (12В)</label></td>
               <td>[шт.]</td>
-              <td><input className='number-input' type='number' step='1' name='elements' id='elements'></input></td>
+              <td><input className='number-input' type='number' step='1' name='bElements' id='bElements'></input></td>
             </tr>
 
             <tr>
@@ -147,7 +147,7 @@ function SlimForm({handleSubmit, buttonDisabled, powerW_and_El}){
   )
 }
 
-function Form({setBatteries, setColumnClasses, windowWidth}) {
+function BatteryCalcForm({setBatteries, setColumnClasses, windowWidth}) {
   let api = new Api;
   
   const [buttonDisabled, setButtonDisabled] = useState(false)
@@ -165,33 +165,33 @@ function Form({setBatteries, setColumnClasses, windowWidth}) {
       n++;
     }
 
-    formData.elements *= 6
+    formData.bElements *= 6
     delete formData.submitButton
     let powerW = formData.power * formData.cos_fi * 1000
-    let power_el = powerW * 100 / (formData.groups * formData.elements * formData.efficiency)
+    let power_el = powerW * 100 / (formData.groups * formData.bElements * formData.efficiency)
     formData.power_el = power_el
 
     setPowerW_and_El([powerW/1000, power_el])
 
     setButtonDisabled(true)
-    api.calcBatteries(formData).then(result => {let v_res = validation(result); setBatteries(v_res[0]); setColumnClasses(v_res[1]); setButtonDisabled(false);})
+    api.calcBatteries(formData).then(result => {let v_res = BatteryCalcValidation(result); setBatteries(v_res[0]); setColumnClasses(v_res[1]); setButtonDisabled(false);})
 
   }
 
   if (windowWidth >= 650){
     return (
       <>
-      <WideForm handleSubmit={handleSubmit} buttonDisabled={buttonDisabled} powerW_and_El={powerW_and_El}></WideForm>
+      <WideForm handleSubmit={handleSubmit} buttonDisabled={buttonDisabled} powerW_and_El={powerW_and_El}/>
       </>
     )
   }
   else{
     return (
       <>
-      <SlimForm handleSubmit={handleSubmit} buttonDisabled={buttonDisabled} powerW_and_El={powerW_and_El}></SlimForm>
+      <SlimForm handleSubmit={handleSubmit} buttonDisabled={buttonDisabled} powerW_and_El={powerW_and_El}/>
       </>
     )
   }
 }
 
-export default Form
+export default BatteryCalcForm
