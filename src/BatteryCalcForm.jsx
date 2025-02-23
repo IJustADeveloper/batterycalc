@@ -16,7 +16,7 @@ function WideForm({handleSubmit, buttonDisabled, powerW_and_El}){
           <tbody>
             <tr>
               <td className='td-left'><label htmlFor='power'>S нагр.</label></td>
-              <td>[кВА]]</td>
+              <td>[кВА]</td>
               <td><input className='number-input' type='number' step='any' name='power' id='power'></input></td>
 
               <td className='td-left'><label htmlFor='bElements'>Q батарей (12В)</label></td>
