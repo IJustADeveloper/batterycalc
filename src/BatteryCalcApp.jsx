@@ -4,7 +4,6 @@ import BatteryCalcForm from './BatteryCalcForm.jsx'
 import Table from './Table.jsx'
 
 
-
 function BatteryCalcApp() {
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
@@ -24,7 +23,7 @@ function BatteryCalcApp() {
   const [batteries, setBatteries] = useState(null);
   const [columnClasses, setColumnClasses] = useState(null);
 
-  const batTableNames = ['Вендор', 'Модель', 'Мощность', 't разряда', 'Мощность расcчитана?']
+  const batTableNames = ['Вендор', 'Модель', 'Мощность', 't разряда SOL', 't разряда EOL']
 
   return (
     <>

@@ -41,13 +41,13 @@
   padding: 10px 10px;
 }
 
-.table-header th:hover{
+/*.table-header th:hover{
   background-color: #91fae7;
   color: #0b454d;
   border-bottom: 3px solid;
   border-color: #91fae7;
   padding: 10px 10px;
-}
+}*/
 
 .table td{
   padding: 8px 10px;
@@ -150,3 +150,35 @@
 .flex .col{
   flex-direction: column;
 }
+
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #aee7eb;
+}
+
+nav ul li {
+  float: left;
+}
+
+nav ul li a {
+  display: block;
+  color: #0b454d;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+nav ul li a:hover {
+  background-color: #dcf1f2;
+}
+

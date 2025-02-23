@@ -3,11 +3,18 @@ function BatteryCalcValidation(data){
     let arr = data.data
 
     for (let i=0; i<arr.length; i++){
-        arr[i].power = arr[i].power.toFixed(2)
+        for (let [key, value] of Object.entries(arr[i])){
+            if (typeof value == 'number'){
+                arr[i][key] = value.toFixed(2)
+            }
+        }
+        /*arr[i].power = arr[i].power.toFixed(2)
         if (typeof arr[i].discharge_time == 'number'){
             arr[i].discharge_time = arr[i].discharge_time.toFixed(2)
-        }
-        if(arr[i].was_calculated){ arr[i].was_calculated = 'Да'} else { arr[i].was_calculated = 'Нет'}
+        }*/
+        if(arr[i].was_calculated !== undefined){
+            if(arr[i].was_calculated){ arr[i].was_calculated = 'Yes'} else { arr[i].was_calculated = 'No'}
+        } 
     }
     data.data = arr
 

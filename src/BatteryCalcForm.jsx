@@ -16,7 +16,7 @@ function WideForm({handleSubmit, buttonDisabled, powerW_and_El}){
           <tbody>
             <tr>
               <td className='td-left'><label htmlFor='power'>S нагр.</label></td>
-              <td>[кВА]</td>
+              <td>[кВА]]</td>
               <td><input className='number-input' type='number' step='any' name='power' id='power'></input></td>
 
               <td className='td-left'><label htmlFor='bElements'>Q батарей (12В)</label></td>
@@ -55,11 +55,11 @@ function WideForm({handleSubmit, buttonDisabled, powerW_and_El}){
             </tr>
 
             <tr className='light-blue-bg'>
-              <td className='td-left'>P нагр.</td>
-              <td>[кВт]</td>
+              <td className='td-left'>P pwr.</td>
+              <td>[kW]</td>
               <td>{typeof powerW_and_El[0] === 'number' ? powerW_and_El[0].toFixed(2) : powerW_and_El[0]}</td>
-              <td className='td-left'>P батереи</td>
-              <td>[Вт/эл]</td>
+              <td className='td-left'>P battery</td>
+              <td>[W/el]</td>
               <td>{typeof powerW_and_El[1] === 'number' ? powerW_and_El[1].toFixed(2) : powerW_and_El[1]}</td>
             </tr>
           </tbody>

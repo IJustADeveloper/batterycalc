@@ -159,7 +159,7 @@ function Form({handleSubmit, buttonDisabled, powerEl, names}){
           <form onSubmit={preHandleSubmit} onChange={handleChangeParams}>
             <div className='box flex col border-light-blue border-thick' style={{height: '100%'}}>
               <div className='box underline blue-bg'>
-                <h3 className='multiple-choice-header'>Ввод данных</h3>
+                <h3 className='multiple-choice-header'>Ввод данных:</h3>
               </div>  
               <table className='table form' style={{flex: 1, marginBottom: 0}}>
                 <tbody>
@@ -206,8 +206,8 @@ function Form({handleSubmit, buttonDisabled, powerEl, names}){
                   </tr>
 
                   <tr className='light-blue-bg'> 
-                    <td className='td-left'>P батереи</td>
-                    <td>[Вт/эл]</td>
+                    <td className='td-left'>P battery</td>
+                    <td>[V/el]</td>
                     <td>{typeof powerEl === 'number' ? powerEl.toFixed(2) : powerEl}</td>
                     <td colSpan={2}>
                       <button type='submit' name='submitButton' disabled={buttonDisabled} >Выбрать</button>
