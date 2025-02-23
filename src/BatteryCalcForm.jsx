@@ -55,11 +55,11 @@ function WideForm({handleSubmit, buttonDisabled, powerW_and_El}){
             </tr>
 
             <tr className='light-blue-bg'>
-              <td className='td-left'>P pwr.</td>
-              <td>[kW]</td>
+              <td className='td-left'>P нагр.</td>
+              <td>[кВт]</td>
               <td>{typeof powerW_and_El[0] === 'number' ? powerW_and_El[0].toFixed(2) : powerW_and_El[0]}</td>
-              <td className='td-left'>P battery</td>
-              <td>[W/el]</td>
+              <td className='td-left'>P батареи</td>
+              <td>[Вт/эл]</td>
               <td>{typeof powerW_and_El[1] === 'number' ? powerW_and_El[1].toFixed(2) : powerW_and_El[1]}</td>
             </tr>
           </tbody>

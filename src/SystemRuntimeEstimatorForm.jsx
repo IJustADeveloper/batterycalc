@@ -206,8 +206,8 @@ function Form({handleSubmit, buttonDisabled, powerEl, names}){
                   </tr>
 
                   <tr className='light-blue-bg'> 
-                    <td className='td-left'>P battery</td>
-                    <td>[V/el]</td>
+                    <td className='td-left'>P батареи</td>
+                    <td>[Вт/эл]</td>
                     <td>{typeof powerEl === 'number' ? powerEl.toFixed(2) : powerEl}</td>
                     <td colSpan={2}>
                       <button type='submit' name='submitButton' disabled={buttonDisabled} >Выбрать</button>
