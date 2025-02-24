@@ -5,7 +5,9 @@ function BatteryCalcValidation(data){
     for (let i=0; i<arr.length; i++){
         for (let [key, value] of Object.entries(arr[i])){
             if (typeof value == 'number'){
-                arr[i][key] = value.toFixed(2)
+                if (!Number.isInteger(value)){
+                    arr[i][key] = value.toFixed(2)
+                }
             }
         }
         /*arr[i].power = arr[i].power.toFixed(2)
