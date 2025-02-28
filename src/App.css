@@ -634,6 +634,10 @@
   background-color: #0076A4;
 }
 
+.hide-td{
+  display: none;
+}
+
 /*.table{
   border-collapse: collapse;
   margin-bottom: 20px;

@@ -24,7 +24,7 @@ function BatteryCalcValidation(data){
     }
     data.data = arr
 
-    let column_classes = {'vendor': 'td-left', 'series': 'td-left','model': 'td-left'}
+    let column_classes = {'vendor': 'td-left', 'series': 'td-left','model': 'td-left', 'battery_id': 'hide-td'}
 
     return [data, column_classes]
 }

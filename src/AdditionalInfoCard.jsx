@@ -36,7 +36,7 @@ function AdditionalInfoCard(){
                                         <td>-</td>
                                     </tr>
                                     <tr>
-                                        <td>Design life, years</td>
+                                        <td>Lifespan, years</td>
                                         <td>-</td>
                                     </tr>
                                     <tr>

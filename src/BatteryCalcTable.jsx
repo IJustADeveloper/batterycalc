@@ -35,7 +35,7 @@ function BatteryCalcTable({data, columnClasses={}, /*columnNames = null,*/ windo
                 if (columnClasses[key] !== undefined) {classname += " "+columnClasses[key]}
                 cells.push(<td className={classname} key={i+":"+key}>{''+arr[i][key]}</td>)
             }
-            rows.push(<tr key={i}>{cells}</tr>)
+            rows.push(<tr onClick={()=>{console.log('hi')}} key={i}>{cells}</tr>)
         }
 
     }

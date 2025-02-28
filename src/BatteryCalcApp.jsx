@@ -24,6 +24,8 @@ function BatteryCalcApp() {
   const [batteries, setBatteries] = useState(null);
   const [columnClasses, setColumnClasses] = useState(null);
 
+  const [selectedBatteryId, setSelectedBatteryId] = useState(null);
+  
   //const batTableNames = ['Вендор', 'Модель', 'Мощность', 't разряда SOL', 't разряда EOL', 'Q батарей в группе', 'Q батарей всего']
 
   return (
