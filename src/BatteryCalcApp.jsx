@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import BatteryCalcForm from './BatteryCalcForm.jsx'
-import Table from './Table.jsx'
+import BatteryCalcTable from './BatteryCalcTable.jsx'
+import AdditionalInfoCard from './AdditionalInfoCard.jsx'
 
 
 function BatteryCalcApp() {
@@ -23,14 +24,16 @@ function BatteryCalcApp() {
   const [batteries, setBatteries] = useState(null);
   const [columnClasses, setColumnClasses] = useState(null);
 
-  const batTableNames = ['Вендор', 'Модель', 'Мощность', 't разряда SOL', 't разряда EOL', 'Q батарей в группе', 'Q батарей всего']
+  //const batTableNames = ['Вендор', 'Модель', 'Мощность', 't разряда SOL', 't разряда EOL', 'Q батарей в группе', 'Q батарей всего']
 
   return (
-    <>
-        <div className='flex-center'>
-            <BatteryCalcForm setBatteries={setBatteries} setColumnClasses={setColumnClasses} windowWidth={windowWidth}></BatteryCalcForm>
+    <>  
+        <div className='battsize-page-header'><p>Battery Size</p><img src='assets/battery-size-icon.svg' alt='' width='35px' height='33px' /></div>
+        <div className='battsize-page-container'>
+          <BatteryCalcForm setBatteries={setBatteries} setColumnClasses={setColumnClasses} windowWidth={windowWidth}/>
+          <BatteryCalcTable data={batteries} columnClasses={columnClasses} /*columnNames={batTableNames}*/ windowWidth={windowWidth}/>
+          <AdditionalInfoCard/>
         </div>
-        <Table data={batteries} columnClasses={columnClasses} columnNames={batTableNames} windowWidth={windowWidth}></Table>
     </>
   )
 }

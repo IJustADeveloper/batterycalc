@@ -9,7 +9,7 @@ function MultipleChoiceWithHeaders({header, answertype, data}){
 
   let tbody = []
   for (const [header, answers] of Object.entries(data)){
-    tbody.push(<tr key={header}><td colSpan={2} className="multiple-choice-list-header">{header}</td></tr>)
+    tbody.push(<tr key={header}><td colSpan={2} className="header">{header}</td></tr>)
 
     answers.forEach(answer=>{
       tbody.push(
@@ -23,12 +23,12 @@ function MultipleChoiceWithHeaders({header, answertype, data}){
 
   return (
     <>
-      <div className='box multiple-choice-card border-light-blue border-thick'>
-        <div className='box underline blue-bg'>
-          <h3 className='multiple-choice-header'>{header}</h3>
+      <div className='multiple-choice-container'>
+        <div className='multiple-choice-header'> 
+          {header}
         </div>  
 
-        <div className='box multiple-choice-list-container vertical-scroll'>
+        <div className='multiple-choice-list-container'>
           <table className='multiple-choice-list-table'>
             <tbody>
               {tbody}
@@ -148,73 +148,87 @@ function Form({handleSubmit, buttonDisabled, powerEl, names}){
 
   return (
     <>
-        <div className='flex' style={{marginBottom: '20px'}}>
+        <div className=''>
           <form onChange={handleChangeNames}>
-            <div className='flex'>
-              <MultipleChoiceWithHeaders header='Вендор' answertype={'vendor'} data={{'Вендоры': Object.keys(names)}}/>
-              <MultipleChoiceWithHeaders header='Серия' answertype={'series'} data={showingSeries}/>
-              <MultipleChoiceWithHeaders header='Модель' answertype={'model'} data={showingModels}/>
+            <div className='choose-batt-container'>
+              <div className='numbered-header'>
+                <div className='number-box maroon'>1</div>
+                <p>Choose batteries:</p>
+              </div>
+              <div className='flex'>
+                <MultipleChoiceWithHeaders header='Brand' answertype={'vendor'} data={{'Brands': Object.keys(names)}}/>
+                <MultipleChoiceWithHeaders header='Series' answertype={'series'} data={showingSeries}/>
+                <MultipleChoiceWithHeaders header='Model' answertype={'model'} data={showingModels}/>
+              </div>
             </div>
           </form>
+
           <form onSubmit={preHandleSubmit} onChange={handleChangeParams}>
-            <div className='box flex col border-light-blue border-thick' style={{height: '100%'}}>
-              <div className='box underline blue-bg'>
-                <h3 className='multiple-choice-header'>Ввод данных:</h3>
-              </div>  
-              <table className='table form' style={{flex: 1, marginBottom: 0}}>
+
+            
+            
+            <div className='data-entry-container'>
+              <div className='numbered-header'>
+                <div className='number-box yellow'>2</div>
+                <p>Data Entry:</p>
+              </div>
+              <table className='data-entry-table' style={{flex: 1, marginBottom: 0}}>
                 <tbody>
                   <tr>
-                    <td className='td-left'><label htmlFor='powerS'>S нагр.</label></td>
-                    <td>[кВА]</td>
+                    <td className='td-left'><label htmlFor='powerS'>S of load</label></td>
+                    <td>[kVA]</td>
                     <td><input className='number-input' type='number' step='any' name='powerS' id='powerS'></input></td>
                   </tr>
 
                   <tr>
-                    <td className='td-left'><label htmlFor='cos_fi'>cos(fi)</label></td>
+                    <td className='td-left'><label htmlFor='cos_fi'>cos(fi) of load</label></td>
                     <td>[-]</td>
                     <td><input className='number-input' type='number' step='0.01' max='1' name='cos_fi' id='cos_fi' defaultValue={1}></input></td>
                   </tr>
 
                   <tr>
-                    <td className='td-left'><label htmlFor='powerP'>P нагр.</label></td>
-                    <td>[кВт]</td>
+                    <td className='td-left'><label htmlFor='powerP'>P of load</label></td>
+                    <td>[kW]</td>
                     <td><input className='number-input' type='number' step='any' name='powerP' id='powerP'></input></td>                
                   </tr>
 
                   <tr>
-                    <td className='td-left'><label htmlFor='efficiency'>КПД инв.</label></td>
+                    <td className='td-left'><label htmlFor='efficiency'>Inverter efficiency</label></td>
                     <td>[%]</td>
                     <td><input className='number-input' type='number' max='100' step='any' name='efficiency' id='efficiency'></input></td>
                   </tr>
 
                   <tr>
-                    <td className='td-left'><label htmlFor='bElements'>Q батарей (12В)</label></td>
-                    <td>[шт.]</td>
+                    <td className='td-left'><label htmlFor='bElements'>Q of batteries (12V)</label></td>
+                    <td>[pcs]</td>
                     <td><input className='number-input' type='number' step='1' name='bElements' id='bElements'></input></td>
                   </tr>
 
                   <tr>
-                    <td className='td-left'><label htmlFor='groups'>Q групп</label></td>
-                    <td>[шт.]</td>
+                    <td className='td-left'><label htmlFor='groups'>Q of strings</label></td>
+                    <td>[pcs]</td>
                     <td><input className='number-input' type='number' step='1' name='groups' defaultValue={1} id='groups'></input></td>
                   </tr>
 
                   <tr>
-                    <td className='td-left'><label htmlFor='depth'>Глубина разряда</label></td>
-                    <td>[В/эл]</td>
+                    <td className='td-left'><label htmlFor='depth'>Depth of Discharge</label></td>
+                    <td>[V/cell]</td>
                     <td><input className='number-input' type='number' step='0.01' max='2' name='depth' id='depth'></input></td>
-                  </tr>
-
-                  <tr className='light-blue-bg'> 
-                    <td className='td-left'>P батареи</td>
-                    <td>[Вт/эл]</td>
-                    <td>{typeof powerEl === 'number' ? powerEl.toFixed(2) : powerEl}</td>
-                    <td colSpan={2}>
-                      <button type='submit' name='submitButton' disabled={buttonDisabled} >Выбрать</button>
-                    </td>
                   </tr>
                 </tbody>
               </table>
+              
+              <div className='data-entry-power-container'>
+                <div className='data-entry-power'>
+                  <div>P battery, W/cell</div>
+                  <div>{typeof powerEl === 'number' ? powerEl.toFixed(2) : powerEl}</div>
+                </div>
+              </div>
+
+              <button className='data-entry-submit-button' type='submit' name='submitButton' disabled={buttonDisabled}  >
+                <div>CALCULATE</div><img src='assets/calculate-button-icon.svg' alt='' />
+              </button>
+              
             </div>
           </form>
         </div>

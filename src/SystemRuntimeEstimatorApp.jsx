@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import Table from './Table.jsx'
 import SystemRuntimeEstimateForm from './SystemRuntimeEstimatorForm.jsx'
+import SystemRuntimeEstimateTable from './SystemRuntimeEstimatorTable.jsx'
 
 function SystemRuntimeEstimatorApp() {
 
@@ -22,14 +22,15 @@ function SystemRuntimeEstimatorApp() {
   const [batteries, setBatteries] = useState(null);
   const [columnClasses, setColumnClasses] = useState(null);
 
-  const batTableNames = ['Вендор', 'Серия', 'Модель', 't разряда SOL', 't разряда EOL', 'Подходящие шкафы']
+  //const batTableNames = ['Вендор', 'Серия', 'Модель', 't разряда SOL', 't разряда EOL', 'Подходящие шкафы']
 
   return (
     <>  
-        <div className='flex-center'>
-            <SystemRuntimeEstimateForm setBatteries={setBatteries} setColumnClasses={setColumnClasses} windowWidth={windowWidth}></SystemRuntimeEstimateForm>
-        </div>
-        <Table data={batteries} columnClasses={columnClasses} columnNames={batTableNames} windowWidth={windowWidth}></Table>
+      <div className='batttime-page-header'><p>Battery Time</p><img src='assets/battery-time-icon.svg' alt='' width='34px' height='32px' /></div>
+      <div className='batttime-page-container'>
+        <SystemRuntimeEstimateForm setBatteries={setBatteries} setColumnClasses={setColumnClasses} windowWidth={windowWidth}/>
+        < SystemRuntimeEstimateTable data={batteries} columnClasses={columnClasses} /*columnNames={batTableNames}*/ windowWidth={windowWidth}/>
+      </div>
     </>
   )
 }

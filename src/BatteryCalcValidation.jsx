@@ -17,6 +17,10 @@ function BatteryCalcValidation(data){
         if(arr[i].was_calculated !== undefined){
             if(arr[i].was_calculated){ arr[i].was_calculated = 'Yes'} else { arr[i].was_calculated = 'No'}
         } 
+
+        if(arr[i].margin !== undefined){
+            arr[i].margin = arr[i].margin.toString() + '%'
+        }
     }
     data.data = arr
 
