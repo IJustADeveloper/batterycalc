@@ -123,7 +123,7 @@ function SlimForm({handleSubmit, buttonDisabled, powerW_and_El}){
                 </tr>
 
                 <tr>
-                  <td className='td-left'><label htmlFor='percent'>Tolerance range</label></td>
+                  <td className='td-left'><label htmlFor='percent'>Margin</label></td>
                   <td>[%]</td>
                   <td><input className='number-input' type='number' step='any' name='percent' id='percent'></input></td>
                 </tr>
@@ -153,7 +153,7 @@ function SlimForm({handleSubmit, buttonDisabled, powerW_and_El}){
   )
 }
 
-function BatteryCalcForm({setBatteries, setColumnClasses, windowWidth}) {
+function BatteryCalcForm({setData, setColumnClasses, windowWidth}) {
   let api = new Api;
   
   const [buttonDisabled, setButtonDisabled] = useState(false)
@@ -180,7 +180,7 @@ function BatteryCalcForm({setBatteries, setColumnClasses, windowWidth}) {
     setPowerW_and_El([powerW/1000, power_el])
 
     setButtonDisabled(true)
-    api.calcBatteries(formData).then(result => {let v_res = BatteryCalcValidation(result); setBatteries(v_res[0]); setColumnClasses(v_res[1]); setButtonDisabled(false);})
+    api.calcBatteries(formData).then(result => {let v_res = BatteryCalcValidation(result); setData(v_res[0]); setColumnClasses(v_res[1]); setButtonDisabled(false);})
 
   }
 

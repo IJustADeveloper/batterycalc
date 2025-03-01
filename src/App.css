@@ -380,7 +380,7 @@
 }
 
 .batttime-table tr.highlight td{
-  background-color: #B81668;
+  background-color: #0076A4;
   color: #EEF2F4;
 }
 
@@ -550,6 +550,11 @@
   padding-left: 18px;
   flex: 1;
 }
+
+.datasheet-link-button:disabled {
+  background-color: #c9df89;
+  color: #ffffff;
+}
 /*-------------------------------------------------------------*/
 
 .adinfo-card-summary-main-container{
@@ -603,7 +608,7 @@
   padding: 0 0 1px 0;
   font-size: 16px;
   font-weight: 600;
-  border-bottom: 2px #8491A4 dashed;
+  border-bottom: 1px #8491A4 dotted;
   line-height: 40px;
 }
 
@@ -706,8 +711,6 @@
   flex-direction: column;
   align-items: center;
 }
-
-
 
 .border-light-blue{
   border-style: solid;

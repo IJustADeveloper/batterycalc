@@ -48,7 +48,7 @@ function Form({handleSubmit, buttonDisabled, powerEl, names}){
 
   function handleChangeNames(event){
     let formInput = event.target
-    console.log(event)
+
 
     if (formInput.type !== 'checkbox'){
       return;
@@ -236,7 +236,7 @@ function Form({handleSubmit, buttonDisabled, powerEl, names}){
   )
 }
 
-function SystemRuntimeEstimateForm({setBatteries, setColumnClasses, windowWidth}) {
+function SystemRuntimeEstimateForm({setData, setColumnClasses, windowWidth}) {
   let api = new Api;
   
   const [buttonDisabled, setButtonDisabled] = useState(false)
@@ -252,7 +252,7 @@ function SystemRuntimeEstimateForm({setBatteries, setColumnClasses, windowWidth}
   function handleSubmit(formData){
     setButtonDisabled(true)
     setPowerEl(formData.power_el)
-    api.systemRuntimeEstimate(formData).then(result => {let v_res = SystemRuntimeEstimatorValidation(result); setBatteries(v_res[0]); setColumnClasses(v_res[1]); setButtonDisabled(false);})
+    api.systemRuntimeEstimate(formData).then(result => {let v_res = SystemRuntimeEstimatorValidation(result); setData(v_res[0]); setColumnClasses(v_res[1]); setButtonDisabled(false);})
   }
 
   if (namesLoaded){

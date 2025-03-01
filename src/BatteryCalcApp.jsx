@@ -21,7 +21,8 @@ function BatteryCalcApp() {
     };
   }, []);
 
-  const [batteries, setBatteries] = useState(null);
+  const [data, setData] = useState(null);
+
   const [columnClasses, setColumnClasses] = useState(null);
 
   const [selectedBatteryId, setSelectedBatteryId] = useState(null);
@@ -32,9 +33,9 @@ function BatteryCalcApp() {
     <>  
         <div className='battsize-page-header'><p>Battery Size</p><img src='assets/battery-size-icon.svg' alt='' width='35px' height='33px' /></div>
         <div className='battsize-page-container'>
-          <BatteryCalcForm setBatteries={setBatteries} setColumnClasses={setColumnClasses} windowWidth={windowWidth}/>
-          <BatteryCalcTable data={batteries} columnClasses={columnClasses} /*columnNames={batTableNames}*/ windowWidth={windowWidth}/>
-          <AdditionalInfoCard/>
+          <BatteryCalcForm setData={setData} setColumnClasses={setColumnClasses} windowWidth={windowWidth}/>
+          <BatteryCalcTable data={data} columnClasses={columnClasses} /*columnNames={batTableNames}*/ windowWidth={windowWidth} selectedBatteryId={selectedBatteryId} setSelectedBatteryId={setSelectedBatteryId}/>
+          <AdditionalInfoCard data={data} selectedBatteryId={selectedBatteryId}/>
         </div>
     </>
   )
