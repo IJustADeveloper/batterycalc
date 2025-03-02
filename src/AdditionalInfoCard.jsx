@@ -135,7 +135,7 @@ function AdditionalInfoCard({data, selectedBatteryId}){
                                 <tr>
                                     <td><img src='assets/cost-icon.svg' alt='' width='26px' height='26px'/></td>
                                     <td>-</td>
-                                    <td>$</td>
+                                    <td>USD</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -146,7 +146,7 @@ function AdditionalInfoCard({data, selectedBatteryId}){
                         </div>
                         <div className='small-info-container'>
                             <img src='assets/info-icon.svg' alt='' width='13px' height='13px'/>
-                            <p>Select rows in Table #2 you want to save before pushing the button above.</p>
+                            <p>Select rows in Table Results you want to save before pushing the button above.</p>
                         </div>
                     </div>
                 </div>

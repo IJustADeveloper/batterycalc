@@ -21,6 +21,20 @@ function BatteryCalcValidation(data){
         if(arr[i].margin !== undefined){
             arr[i].margin = arr[i].margin.toString() + '%'
         }
+
+        if(arr[i].discharge_time_start_life !== undefined && arr[i].discharge_time_start_life !== null){
+            let h = Math.floor(arr[i].discharge_time_start_life / 60)
+            let m = Math.floor(arr[i].discharge_time_start_life % 60)
+            let s = Math.floor((arr[i].discharge_time_start_life % 1)*60)
+            arr[i].discharge_time_start_life = `${h}:${ m < 10 ? "0" + m : m }:${ s < 10 ? "0" + s : s }`
+        }
+
+        if(arr[i].discharge_time_end_life !== undefined && arr[i].discharge_time_end_life !== null){
+            let h = Math.floor(arr[i].discharge_time_end_life / 60)
+            let m = Math.floor(arr[i].discharge_time_end_life % 60)
+            let s = Math.floor((arr[i].discharge_time_end_life % 1)*60)
+            arr[i].discharge_time_end_life = `${h}:${ m < 10 ? "0" + m : m }:${ s < 10 ? "0" + s : s }`
+        }
     }
     data.data = arr
 
