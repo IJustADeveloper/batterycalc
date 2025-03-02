@@ -78,7 +78,7 @@ function AdditionalInfoCard({data, selectedBatteryId}){
                         </div>  
 
                         <div className='adinfo-card-details'>
-`                           <p>Dimensions & weight:</p>
+                            <p>Dimensions & weight:</p>
                             <table>
                                 <tbody>
                                     <tr>
@@ -105,7 +105,12 @@ function AdditionalInfoCard({data, selectedBatteryId}){
                             </table>
                         </div>
 
-                        <button className='datasheet-link-button' disabled={isButtonDisabled} onClick={() => window.location.replace(batt !== null && batt.docs_link !== null ? batt.docs_link :  '')}><div>Datasheet</div> <img src='assets/datasheet-link-button.svg' alt='' width='18px' height='18px'/></button>
+                        <div className='button-container'>
+                            <button className='datasheet-link-button' disabled={isButtonDisabled} onClick={() => window.location.replace(batt !== null && batt.docs_link !== null ? batt.docs_link :  '')}>
+                                <div>Datasheet</div> 
+                                <img src='assets/datasheet-link-button.svg' alt='' width='18px' height='18px'/>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -127,8 +132,22 @@ function AdditionalInfoCard({data, selectedBatteryId}){
                                     <td>{tr !== null && batt !== null && batt.length !== null && batt.width !== null && (batt.height !== null || batt.max_height !== null) ? (batt.width * batt.length * f(batt.height, batt.max_height) * parseFloat(tr.children[6].innerText) / 1000000000).toFixed(3) :  '-'}</td>
                                     <td>m3</td>
                                 </tr>
+                                <tr>
+                                    <td><img src='assets/cost-icon.svg' alt='' width='26px' height='26px'/></td>
+                                    <td>-</td>
+                                    <td>$</td>
+                                </tr>
                             </tbody>
                         </table>
+                        <div className='button-container'>
+                            <button className='data-entry-submit-button' style={{margin: '0', padding: '6px 15px'}}>
+                                <div>Save results</div><img src='assets/calculate-button-icon.svg' alt='' width='18px' height='18px'/>
+                            </button>
+                        </div>
+                        <div className='small-info-container'>
+                            <img src='assets/info-icon.svg' alt='' width='13px' height='13px'/>
+                            <p>Select rows in Table #2 you want to save before pushing the button above.</p>
+                        </div>
                     </div>
                 </div>
             </div>
