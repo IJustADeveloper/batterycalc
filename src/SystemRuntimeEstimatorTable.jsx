@@ -1,4 +1,5 @@
 import {useState, useLayoutEffect, useRef} from 'react'
+import SystemRuntimeEstimatorValidation from './SystemRuntimeEstimatorValidation';
 
 const batTableNames = ['Brand', 'Model', 'min BOL', 'min EOL', 'Q / string', 'Strings', 'Total']
 
@@ -66,7 +67,12 @@ function BatteryCalcTable({data, columnClasses={}, /*columnNames = null,*/ windo
     let header
     let columns = []
     for (let i=0; i<columnNames.length; i++){
-        columns.push(<th onClick={()=>{applySort(i)}} key={'column:'+columnNames[i]}>{columnNames[i]}{sortConfig.key === i && (sortConfig.direction === 'ascending' ? ' ▲' : sortConfig.direction === 'descending' ? ' ▼' : '')}</th>)
+        columns.push(
+            <th onClick={()=>{applySort(i)}} key={'column:'+columnNames[i]}>
+                {columnNames[i]}
+                <img style={{paddingLeft: '5px'}} src={sortConfig.key === i ? (sortConfig.direction === 'ascending' ? 'assets/sorting-arrows-up.svg' : sortConfig.direction === 'descending' ? 'assets/sorting-arrows-down.svg' : 'assets/sorting-arrows.svg') : 'assets/sorting-arrows.svg'} alt=''/>
+            </th>
+        )
     }
 
     header = [<tr className='table-header' key={'header'}>{columns}</tr>]
@@ -74,9 +80,14 @@ function BatteryCalcTable({data, columnClasses={}, /*columnNames = null,*/ windo
 
     let rows
     if (data !== null){
+        let columnClasses
         let arr = data.data
 
         arr = sortData(structuredClone(arr))
+
+        let res = SystemRuntimeEstimatorValidation(arr)
+        arr = res[0]
+        columnClasses = res[1]
 
         rows = []
         for (let i=0; i<arr.length; i++){

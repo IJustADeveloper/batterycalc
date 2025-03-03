@@ -178,6 +178,8 @@
 
   display: flex;
   flex-direction: row;
+
+  cursor: pointer;
 }
 
 .data-entry-submit-button:hover{
@@ -211,6 +213,7 @@
   height: 662px;
   box-sizing: border-box;
   border: 1px solid #EEF2F4;
+  border-top: none;
   overflow-y: scroll;
 }
 
@@ -349,6 +352,7 @@
   height: 662px;
   box-sizing: border-box;
   border: 1px solid #EEF2F4;
+  border-top: none;
   overflow-y: scroll;
 }
 
@@ -541,6 +545,8 @@
 
   display: flex;
   flex-direction: row;
+
+  cursor: pointer;
 }
 
 .datasheet-link-button:active{

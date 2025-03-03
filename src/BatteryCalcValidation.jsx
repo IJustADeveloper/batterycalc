@@ -1,6 +1,6 @@
 function BatteryCalcValidation(data){
 
-    let arr = data.data
+    let arr = data
 
     for (let i=0; i<arr.length; i++){
         for (let [key, value] of Object.entries(arr[i])){
@@ -26,21 +26,20 @@ function BatteryCalcValidation(data){
             let h = Math.floor(arr[i].discharge_time_start_life / 60)
             let m = Math.floor(arr[i].discharge_time_start_life % 60)
             let s = Math.floor((arr[i].discharge_time_start_life % 1)*60)
-            arr[i].discharge_time_start_life = `${h}:${ m < 10 ? "0" + m : m }:${ s < 10 ? "0" + s : s }`
+            arr[i].discharge_time_start_life = `${h}:${m < 10 ? "0" + m : m}:${ s < 10 ? "0" + s : s}`
         }
 
         if(arr[i].discharge_time_end_life !== undefined && arr[i].discharge_time_end_life !== null){
             let h = Math.floor(arr[i].discharge_time_end_life / 60)
             let m = Math.floor(arr[i].discharge_time_end_life % 60)
             let s = Math.floor((arr[i].discharge_time_end_life % 1)*60)
-            arr[i].discharge_time_end_life = `${h}:${ m < 10 ? "0" + m : m }:${ s < 10 ? "0" + s : s }`
+            arr[i].discharge_time_end_life = `${h}:${m < 10 ? "0" + m : m}:${s < 10 ? "0" + s : s}`
         }
     }
-    data.data = arr
 
     let column_classes = {'vendor': 'td-left', 'series': 'td-left','model': 'td-left', 'battery_id': 'hide-td'}
 
-    return [data, column_classes]
+    return [arr, column_classes]
 }
 
 

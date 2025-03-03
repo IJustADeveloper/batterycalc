@@ -1,6 +1,6 @@
 function SystemRuntimeEstimatorValidation(data){
 
-    let arr = data.data
+    let arr = data
 
     for (let i=0; i<arr.length; i++){
         for (let [key, value] of Object.entries(arr[i])){
@@ -25,11 +25,10 @@ function SystemRuntimeEstimatorValidation(data){
             arr[i].discharge_time_end_life = `${h}:${ m < 10 ? "0" + m : m }:${ s < 10 ? "0" + s : s }`
         }
     }
-    data.data = arr
 
     let column_classes = {'vendor': 'td-left', 'series': 'td-left','model': 'td-left', 'cabinet': 'td-left', 'battery_id': 'hide-td'}
 
-    return [data, column_classes]
+    return [arr, column_classes]
 }
 
 

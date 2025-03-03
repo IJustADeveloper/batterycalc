@@ -252,7 +252,7 @@ function SystemRuntimeEstimateForm({setData, setColumnClasses, windowWidth}) {
   function handleSubmit(formData){
     setButtonDisabled(true)
     setPowerEl(formData.power_el)
-    api.systemRuntimeEstimate(formData).then(result => {let v_res = SystemRuntimeEstimatorValidation(result); setData(v_res[0]); setColumnClasses(v_res[1]); setButtonDisabled(false);})
+    api.systemRuntimeEstimate(formData).then(result => { if (result === undefined){result = null}; setData(result); setButtonDisabled(false);})
   }
 
   if (namesLoaded){

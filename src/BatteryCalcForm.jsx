@@ -180,7 +180,7 @@ function BatteryCalcForm({setData, setColumnClasses, windowWidth}) {
     setPowerW_and_El([powerW/1000, power_el])
 
     setButtonDisabled(true)
-    api.calcBatteries(formData).then(result => {let v_res = BatteryCalcValidation(result); setData(v_res[0]); setColumnClasses(v_res[1]); setButtonDisabled(false);})
+    api.calcBatteries(formData).then(result => { if (result === undefined){result = null}; setData(result); setButtonDisabled(false);})
 
   }
 

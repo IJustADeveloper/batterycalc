@@ -41,7 +41,7 @@ function AdditionalInfoCard({data, selectedBatteryId}){
                     </div>
                     <div className='adinfo-card-details-container'>
                         <div className='adinfo-card-details-names'>
-                            <img src={batt !== null && batt.image_link !== null ? batt.image_link :  ''} alt='no image' width='84px' height='84px'/>
+                            <img src={batt !== null && batt.image_link !== null ? batt.image_link :  'assets/Nonbranded_battery-picture.png'} alt='no image' width='84px' height='84px'/>
                             <div>
                                 <p>{batt !== null && batt.model !== null ? batt.model :  'Pick a line'}</p>
                                 <p>{batt !== null && batt.vendor !== null ? batt.vendor :  ''}</p>
