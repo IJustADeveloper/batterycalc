@@ -1,4 +1,4 @@
-function SystemRuntimeEstimatorValidation(data){
+function SystemRuntimeEstimatorValidation(data, currencies, selectedCurrency){
 
     let arr = data
 
@@ -23,6 +23,15 @@ function SystemRuntimeEstimatorValidation(data){
             let m = Math.floor(arr[i].discharge_time_end_life % 60)
             let s = Math.floor((arr[i].discharge_time_end_life % 1)*60)
             arr[i].discharge_time_end_life = `${h}:${ m < 10 ? "0" + m : m }:${ s < 10 ? "0" + s : s }`
+        }
+
+        if(arr[i].price !== undefined){
+            if (arr[i].price.price_min !== null){
+                arr[i].price = Math.ceil(arr[i].price.price_min * currencies[arr[i].price.currency].equivalent / currencies[arr[i].price.currency].currency_amount * currencies[selectedCurrency.currency].currency_amount / currencies[selectedCurrency.currency].equivalent)
+                arr[i].price = arr[i].price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+            }else{
+                arr[i].price = arr[i].price.alt_price
+            }
         }
     }
 

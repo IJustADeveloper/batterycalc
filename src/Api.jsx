@@ -1,6 +1,6 @@
 import axios from "axios";
-//const API_host = 'http://localhost:8000/api'
-const API_host = 'https://momonga.pythonanywhere.com/api'
+const API_host = 'http://localhost:8000/api'
+//const API_host = 'https://momonga.pythonanywhere.com/api'
 
 class Api{
 
@@ -29,6 +29,11 @@ class Api{
                 "content-type": "application/json"
             }
         ).then(response => response.data).catch(error => console.log(error))
+    }
+
+    getCurrencies(){
+        const url = `${API_host}/get_currencies`
+        return axios.get(url).then(response => response.data).catch(error => console.log(error))
     }
 
 }

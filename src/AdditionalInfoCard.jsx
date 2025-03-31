@@ -1,7 +1,40 @@
-import React from 'react'
-import {useNavigate} from 'react-router-dom'
+import {useLayoutEffect, useRef, useMemo} from 'react'
+import {useLocation, useNavigate} from 'react-router-dom'
 
-function AdditionalInfoCard({data, selectedBatteryId}){
+
+
+function AdditionalInfoCard({data, selectedBatteryId, setSelectedCurrency, currencies=null, selectedCurrency=null}){
+
+    const location = useLocation()
+
+    let total_batt_num = null
+    if (data !== null){
+        let battery = data.data[selectedBatteryId]
+        if (battery !== undefined)
+        {
+            total_batt_num = data.data[selectedBatteryId].num_batteries_total
+        }
+    }
+
+    let price = null
+    if (data !== null && selectedCurrency !== null){
+        let battery = data.data[selectedBatteryId]
+        if (battery !== undefined){
+            if (battery.price.price_min !== null){
+                price = Math.ceil(battery.price.price_min * currencies[battery.price.currency].equivalent / currencies[battery.price.currency].currency_amount * currencies[selectedCurrency.currency].currency_amount / currencies[selectedCurrency.currency].equivalent)
+                price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+            }else{
+                price = battery.price.alt_price
+            }
+        }
+    }
+
+    let currency_options = []
+    if(currencies !== null){
+        for (let key in currencies) {
+            currency_options.push(<option value={currencies[key].currency} key={currencies[key].currency}>{currencies[key].currency}</option>)
+        }
+    }
 
     let batt = null
     if (data !== null){
@@ -12,8 +45,6 @@ function AdditionalInfoCard({data, selectedBatteryId}){
     if (batt === undefined){
         batt = null
     }
-    
-    let tr = document.getElementById(selectedBatteryId)
 
     const f = function(a, b){
         if (a === null){
@@ -28,20 +59,38 @@ function AdditionalInfoCard({data, selectedBatteryId}){
     let isButtonDisabled = true
     if (batt !== null && batt.docs_link !== null){
         isButtonDisabled = false;
-        
     }
+
+    let capacity_name = null;
+    let capacity_value = null;
+    if (batt !== null){
+        if (batt.capacity_C10 !== null){
+            capacity_name = 'Capacity C10, Ah'
+            capacity_value = batt.capacity_C10
+        }
+        else if (batt.capacity_C20 !== null){
+            capacity_name = 'Capacity C20, Ah'
+            capacity_value = batt.capacity_C20
+        }
+        else if(batt.capacity_other !== null){
+            capacity_name = `Capacity ${batt.capacity_other_time}min, ${batt.capacity_other_measure}`
+            capacity_value = batt.capacity_other
+        }
+    }
+
+    console.log(location.pathname)
 
     return(
         <>
             <div className='adinfo-card-container'>
                 <div className=''>
-                    <div className='adinfo-card-details-header'>
+                    <div className={'adinfo-card-details-header' + (location.pathname === '/batterycalc/' ? ' maroon' : ' cyan')}>
                         <img src='assets/battery-details-icon.svg' alt='' width='26px' height='18px'/>
                         <p>Battery details:</p>
                     </div>
                     <div className='adinfo-card-details-container'>
                         <div className='adinfo-card-details-names'>
-                            <img src={batt !== null && batt.image_link !== null ? batt.image_link :  'assets/Nonbranded_battery-picture.png'} alt='no image' width='84px' height='84px'/>
+                            <img src={batt !== null && batt.image_link !== null ? batt.image_link :  'assets/Nonbranded_battery-picture_300.png'} alt='no image' width='84px' height='84px'/>
                             <div>
                                 <p>{batt !== null && batt.model !== null ? batt.model :  'Pick a line'}</p>
                                 <p>{batt !== null && batt.vendor !== null ? batt.vendor :  ''}</p>
@@ -62,8 +111,8 @@ function AdditionalInfoCard({data, selectedBatteryId}){
                                         <td>{batt !== null && batt.voltage !== null ? batt.voltage :  '-'}</td>
                                     </tr>
                                     <tr>
-                                        <td>Capacity C10, Ah</td>
-                                        <td>{batt !== null && batt.capacity_C10 !== null ? batt.capacity_C10 :  '-'}</td>
+                                        <td>{capacity_name !== null ? capacity_name : 'Capacity'}</td>
+                                        <td>{capacity_value !== null ? capacity_value :  '-'}</td>
                                     </tr>
                                     <tr>
                                         <td>Lifespan, years</td>
@@ -106,7 +155,7 @@ function AdditionalInfoCard({data, selectedBatteryId}){
                         </div>
 
                         <div className='button-container'>
-                            <button className='datasheet-link-button' disabled={isButtonDisabled} onClick={() => window.location.replace(batt !== null && batt.docs_link !== null ? batt.docs_link :  '')}>
+                            <button className='datasheet-link-button' disabled={isButtonDisabled} onClick={() => {if (batt !== null && batt.docs_link !== null){window.open(batt.docs_link, '_blank')}}}>
                                 <div>Datasheet</div> 
                                 <img src='assets/datasheet-link-button.svg' alt='' width='18px' height='18px'/>
                             </button>
@@ -115,7 +164,7 @@ function AdditionalInfoCard({data, selectedBatteryId}){
                 </div>
 
                 <div className='adinfo-card-summary-main-container'>
-                    <div className='adinfo-card-summary-header'>
+                    <div className={'adinfo-card-summary-header' + (location.pathname === '/batterycalc/' ? ' maroon' : ' cyan')}>
                         <img src='assets/sum-icon.svg' alt='' width='18px' height='18px'/>
                         <p>Solution summary:</p>
                     </div>
@@ -124,18 +173,22 @@ function AdditionalInfoCard({data, selectedBatteryId}){
                             <tbody>
                                 <tr>
                                     <td><img src='assets/mass-icon.svg' alt='' width='26px' height='26px'/></td>
-                                    <td>{tr !== null && batt !== null && batt.weight !== null ? (batt.weight * parseFloat(tr.children[6].innerText)).toFixed(1) :  '-'}</td>
+                                    <td>{total_batt_num !== null && batt !== null && batt.weight !== null ? (batt.weight * total_batt_num).toFixed(1) :  '-'}</td>
                                     <td>kg</td>
                                 </tr>
                                 <tr>
                                     <td><img src='assets/volume-icon.svg' alt='' width='26px' height='26px'/></td>
-                                    <td>{tr !== null && batt !== null && batt.length !== null && batt.width !== null && (batt.height !== null || batt.max_height !== null) ? (batt.width * batt.length * f(batt.height, batt.max_height) * parseFloat(tr.children[6].innerText) / 1000000000).toFixed(3) :  '-'}</td>
+                                    <td>{total_batt_num !== null && batt !== null && batt.length !== null && batt.width !== null && (batt.height !== null || batt.max_height !== null) ? (batt.width * batt.length * f(batt.height, batt.max_height) * total_batt_num / 1000000000).toFixed(3) :  '-'}</td>
                                     <td>m3</td>
                                 </tr>
                                 <tr>
                                     <td><img src='assets/cost-icon.svg' alt='' width='26px' height='26px'/></td>
-                                    <td>-</td>
-                                    <td>USD</td>
+                                    <td>{price !== null  ? price :  '-'}</td>
+                                    <td>
+                                        <select value={selectedCurrency.currency} onChange={(e) => setSelectedCurrency(currencies[e.target.value])} className='adinfo-card-summary-curreny-select'>
+                                            {currency_options}
+                                        </select>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
