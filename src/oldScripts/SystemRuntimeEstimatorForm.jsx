@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react'
-import Api from './Api.jsx'
+import Api from '../Api.jsx'
 import SystemRuntimeEstimatorValidation from './SystemRuntimeEstimatorValidation.jsx'
 
 // header - header that will be displayed on top the MC
@@ -164,9 +164,6 @@ function Form({handleSubmit, buttonDisabled, powerEl, names}){
           </form>
 
           <form onSubmit={preHandleSubmit} onChange={handleChangeParams}>
-
-            
-            
             <div className='data-entry-container'>
               <div className='numbered-header'>
                 <div className='number-box yellow'>2</div>

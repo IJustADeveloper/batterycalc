@@ -1,11 +1,4 @@
-import {useLayoutEffect, useRef, useMemo} from 'react'
-import {useLocation, useNavigate} from 'react-router-dom'
-
-
-
-function AdditionalInfoCard({data, selectedBatteryId, setSelectedCurrency, currencies=null, selectedCurrency=null}){
-
-    const location = useLocation()
+function AdditionalInfoCard({data, selectedBatteryId, setSelectedCurrency, currencies=null, selectedCurrency=null, headerColor='maroon'}){
 
     let total_batt_num = null
     if (data !== null){
@@ -78,13 +71,11 @@ function AdditionalInfoCard({data, selectedBatteryId, setSelectedCurrency, curre
         }
     }
 
-    console.log(location.pathname)
-
     return(
         <>
             <div className='adinfo-card-container'>
                 <div className=''>
-                    <div className={'adinfo-card-details-header' + (location.pathname === '/batterycalc/' ? ' maroon' : ' cyan')}>
+                    <div className={'adinfo-card-details-header ' + headerColor}>
                         <img src='assets/battery-details-icon.svg' alt='' width='26px' height='18px'/>
                         <p>Battery details:</p>
                     </div>
@@ -164,7 +155,7 @@ function AdditionalInfoCard({data, selectedBatteryId, setSelectedCurrency, curre
                 </div>
 
                 <div className='adinfo-card-summary-main-container'>
-                    <div className={'adinfo-card-summary-header' + (location.pathname === '/batterycalc/' ? ' maroon' : ' cyan')}>
+                    <div className={'adinfo-card-summary-header ' + headerColor}>
                         <img src='assets/sum-icon.svg' alt='' width='18px' height='18px'/>
                         <p>Solution summary:</p>
                     </div>

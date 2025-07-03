@@ -44,7 +44,7 @@ function BatteryCalcApp() {
           <div className='battsize-page-header'><p>Battery Size</p><img src='assets/battery-size-icon.svg' alt='' width='35px' height='33px' /></div>
           <div className='battsize-page-container'>
             <BatteryCalcForm setData={setData} setColumnClasses={setColumnClasses} windowWidth={windowWidth}/>
-            <BatteryCalcTable data={data} columnClasses={columnClasses} /*columnNames={batTableNames}*/ windowWidth={windowWidth} selectedBatteryId={selectedBatteryId} setSelectedBatteryId={setSelectedBatteryId} selectedCurrency={selectedCurrency} currencies={currencies}/>
+            <BatteryCalcTable data={data} columnClasses={columnClasses} /*columnNames={batTableNames}*/ selectedBatteryId={selectedBatteryId} setSelectedBatteryId={setSelectedBatteryId} selectedCurrency={selectedCurrency} currencies={currencies}/>
             <AdditionalInfoCard data={data} selectedBatteryId={selectedBatteryId} setSelectedCurrency={setSelectedCurrency} selectedCurrency={selectedCurrency} currencies={currencies}/>
           </div>
       </>

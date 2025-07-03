@@ -1,10 +1,9 @@
-import {useState, useEffect, useLayoutEffect, useRef} from 'react'
-
+import {useState, useEffect, useLayoutEffect, useRef} from 'react';
 import BatteryCalcValidation from './BatteryCalcValidation';
 
-const batTableNames = ['Brand', 'Model', 't BOL', 't EOL', 'Q / string', 'Strings', 'Total', 'Margin', 'Sum']
+const batTableNames = ['Brand', 'Model', 't BOL', 't EOL', 'Q / string', 'Strings', 'Total', 'Margin', 'Sum'];
 
-function BatteryCalcTable({data, /*columnClasses={}, columnNames = null,*/ windowWidth, selectedBatteryId, setSelectedBatteryId, selectedCurrency, currencies}){
+function BatteryCalcTable({data, /*columnClasses={}, columnNames = null,*/ selectedBatteryId, setSelectedBatteryId, selectedCurrency, currencies}){
 
     const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
     const [checkboxSortConfig, setCheckboxSortConfig] = useState({direction: null});
@@ -66,8 +65,6 @@ function BatteryCalcTable({data, /*columnClasses={}, columnNames = null,*/ windo
     const sortData = function(arr){
         if (sortConfig.direction === null) {return arr}
 
-        //console.log(sortConfig.key, Object.keys(arr[0]).length-1, arr[0])
-
         if (sortConfig.key === 8){
             arr.sort((a, b)=>{
                 let valA = a[Object.keys(a)[sortConfig.key]];
@@ -126,13 +123,11 @@ function BatteryCalcTable({data, /*columnClasses={}, columnNames = null,*/ windo
                 return 0;
             })
         }
-
         return arr
     }
     
     let header
     let columns = []
-
     for (let i=0; i<columnNames.length; i++){
         if (columnNames[i] == 'Sum'){
             columns.push(
@@ -168,7 +163,6 @@ function BatteryCalcTable({data, /*columnClasses={}, columnNames = null,*/ windo
         let arr = Object.values(data.data)
 
         arr = sortData(structuredClone(arr))
-
         arr = sortChecked(structuredClone(arr))
 
         let res = BatteryCalcValidation(arr, currencies, selectedCurrency)
@@ -212,7 +206,7 @@ function BatteryCalcTable({data, /*columnClasses={}, columnNames = null,*/ windo
                 <div /*ref={tableDivRef}*/ className='battsize-table-container'>
                     <table /*ref={tableRef}*/ className="battsize-table">
                         <thead>
-                            {header}  
+                            {header}
                         </thead>
                         <tbody>
                             {rows}

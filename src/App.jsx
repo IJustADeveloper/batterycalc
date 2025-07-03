@@ -1,8 +1,11 @@
 import React from 'react'
-import './App.css'
-import BatteryCalcApp  from './BatteryCalcApp'
-import SystemRuntimeEstimatorApp from './SystemRuntimeEstimatorApp'
-import {Route, Routes, useNavigate} from 'react-router-dom'
+import './styles/App.css'
+
+import {Route, Routes, useLocation, useNavigate} from 'react-router-dom'
+
+
+import BatterySizeApp from './BatterySizeApp'
+import BatteryTimeApp from './BatteryTimeApp'
 
 
 function BattsizeNavbarItem({isChosen}){
@@ -17,7 +20,7 @@ function BattsizeNavbarItem({isChosen}){
 
   return (
     <>
-      <div className={item_classes} onClick={() => navigate('/batterycalc/')}>
+      <div className={item_classes} onClick={() => navigate('/batterysize/')}>
         <div className='vert-navbar-item-content-container'>
           <img src={svg_link} alt='' width='47' height='44' draggable={false}/>
           <p>Battery</p>
@@ -40,7 +43,7 @@ function BatttimeNavbarItem({isChosen}){
 
   return(
     <>
-      <div className={item_classes} onClick={() => navigate('/systemRuntimeEstimator/')}>
+      <div className={item_classes} onClick={() => navigate('/batterytime/')}>
         <div className='vert-navbar-item-content-container'>
           <img src={svg_link} alt='' width='46' height='43' draggable={false}/>
           <p>Battery</p>
@@ -54,29 +57,30 @@ function BatttimeNavbarItem({isChosen}){
 
 function App() {
 
+  const location = useLocation()
+
   return (
         <>
         <div className='after-root'>
           <div className='vert-navbar'>
-            <Routes>
-              <Route path='/batterycalc/' element={<BattsizeNavbarItem isChosen={true}/>}/>
-              <Route path='/systemRuntimeEstimator/' element={<BattsizeNavbarItem isChosen={false}/>}/>
-            </Routes>
-
-            <Routes>
-              <Route path='/batterycalc/' element={<BatttimeNavbarItem isChosen={false}/>}/>
-              <Route path='/systemRuntimeEstimator/' element={<BatttimeNavbarItem isChosen={true}/>}/>
-            </Routes>
+            <BattsizeNavbarItem isChosen={location.pathname === "/batterysize/"}/>
+            <BatttimeNavbarItem isChosen={location.pathname === "/batterytime/"}/>
+            
           </div>
           <div className='page'>
             <Routes>
-              <Route path='/batterycalc/' Component={BatteryCalcApp}/>
-              <Route path='/systemRuntimeEstimator/' Component={SystemRuntimeEstimatorApp}/>
+              <Route path='/batterysize/' Component={BatterySizeApp}/>
+              <Route path='/batterytime/' Component={BatteryTimeApp}/>
             </Routes>
           </div>
         </div>
         </>
   )
+  /*
+              <Route path='/batterycalc/' Component={BatteryCalcApp}/>
+              <Route path='/systemRuntimeEstimator/' Component={SystemRuntimeEstimatorApp}/>
+              <Route path='/test_chart/' Component={TestChartApp}/>
+  */
 }
 
 export default App

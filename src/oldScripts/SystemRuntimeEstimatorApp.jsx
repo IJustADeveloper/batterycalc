@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import SystemRuntimeEstimateForm from './SystemRuntimeEstimatorForm.jsx'
 import SystemRuntimeEstimateTable from './SystemRuntimeEstimatorTable.jsx'
-import AdditionalInfoCard from './AdditionalInfoCard.jsx'
-import Api from './Api.jsx'
+import AdditionalInfoCard from '../AdditionalInfoCard.jsx'
+import Api from '../Api.jsx'
 
 
 function SystemRuntimeEstimatorApp() {
@@ -44,7 +44,7 @@ function SystemRuntimeEstimatorApp() {
         <div className='batttime-page-header'><p>Battery Time</p><img src='assets/battery-time-icon.svg' alt='' width='34px' height='32px' /></div>
         <div className='batttime-page-container'>
           <SystemRuntimeEstimateForm setData={setData} setColumnClasses={setColumnClasses} windowWidth={windowWidth}/>
-          < SystemRuntimeEstimateTable data={data} columnClasses={columnClasses} /*columnNames={batTableNames}*/ windowWidth={windowWidth} selectedBatteryId={selectedBatteryId} setSelectedBatteryId={setSelectedBatteryId} selectedCurrency={selectedCurrency} currencies={currencies}/>
+          <SystemRuntimeEstimateTable data={data} columnClasses={columnClasses} /*columnNames={batTableNames}*/ windowWidth={windowWidth} selectedBatteryId={selectedBatteryId} setSelectedBatteryId={setSelectedBatteryId} selectedCurrency={selectedCurrency} currencies={currencies}/>
           <AdditionalInfoCard data={data} selectedBatteryId={selectedBatteryId} setSelectedCurrency={setSelectedCurrency} selectedCurrency={selectedCurrency} currencies={currencies}/>
         </div>
       </>

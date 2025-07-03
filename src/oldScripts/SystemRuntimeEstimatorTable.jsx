@@ -58,16 +58,13 @@ function SystemRuntimeEstimatorTable({data, columnClasses={}, /*columnNames = nu
     }
 
     const applySort = function(key){
-        console.log('sort-checked')
         const direction = key === sortConfig.key ? getNextSortDirection(sortConfig.direction) : 'ascending';
         setSortConfig({ key, direction });
     }
 
     const sortData = function(arr){
         if (sortConfig.direction === null) {return arr}
-
-        //console.log(sortConfig.key, Object.keys(arr[0]).length-1, arr[0])
-        console.log(sortConfig.key)
+        
         if (sortConfig.key === 7){
             arr.sort((a, b)=>{
                 let valA = a[Object.keys(a)[sortConfig.key]];

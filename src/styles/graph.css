@@ -1,0 +1,25 @@
+.graph-table-container{
+    width: 100%;
+    height: calc(100% - 62px);
+    display: flex;
+    flex-direction: row;
+}
+
+.graph-container{
+    flex: 1;
+    border-right: 1px solid #EEF2F4;
+}
+
+.graph-batt-list-table-container{
+    width: 270px;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.graph-selected-batt-table{
+    border-top: 1px solid #EEF2F4;
+}
+
+.graph-controls-container{
+    width: 100%;
+}

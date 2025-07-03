@@ -36,6 +36,11 @@ class Api{
         return axios.get(url).then(response => response.data).catch(error => console.log(error))
     }
 
+    getTestChartData(){
+        const url = `${API_host}/test_chart_data`
+        return axios.get(url).then(response => response.data).catch(error => console.log(error))
+    }
+
 }
 
 export default Api
