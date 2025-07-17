@@ -1,10 +1,29 @@
 import { useState, useEffect } from 'react'
-import { LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip } from 'recharts'
+import { LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip, ResponsiveContainer } from 'recharts'
 import './styles/graph.css'
 
 import Table from './Table'
 
 const colorsForColorClasses = {"maroon": "#B81668", "cyan": "#0076A4", "yellow": "#FEC909"};
+
+// these two functions get maximum/minimum value for an array inside an object inside an object. ex: {<id>: {<key>: [...]}...}
+function getMaxForObjectKey(obj, key){
+    return Math.max(...Object.entries(obj).map(([id, innerObj])=>{
+        return Math.max(...innerObj[key])
+    }));
+}
+
+function getMinForObjectKey(obj, key){
+    return Math.min(...Object.entries(obj).map(([id, innerObj])=>{
+        return Math.min(...innerObj[key])
+    }));
+}
+
+function isInRange(n, range){
+    let left = (isNaN(range[0]) || range[0] === null ? true : n >= range[0]);
+    let right = (isNaN(range[1]) || range[1] === null ? true : n <= range[1]);
+    return (left && right);
+}
 
 function randomColorGen(){
     const chars = "0123456789ABCDEF"
@@ -48,7 +67,7 @@ function CubicHermiteSplineInterpolator(xValues, yValues, dydxValues, outputXVal
         if (includeBasePoints){
             if (previousIndex !== rightPointIndex){
                 for (previousIndex; previousIndex<=rightPointIndex-1; previousIndex++){
-                    if(xValues[previousIndex] > outputXValues[0] && xValues[previousIndex] < outputXValues[outputXValues.length-1]){
+                    if(xValues[previousIndex] >= outputXValues[0] && xValues[previousIndex] <= outputXValues[outputXValues.length-1]){
                         outputXYPairs.push([xValues[previousIndex], yValues[previousIndex]]);
                     }
                 }
@@ -69,7 +88,7 @@ function CubicHermiteSplineInterpolator(xValues, yValues, dydxValues, outputXVal
     })
 
     if (includeBasePoints){
-        if(xValues[xValues.length - 1] > outputXValues[0] && xValues[xValues.length - 1] < outputXValues[outputXValues.length-1]){
+        if(xValues[xValues.length - 1] >= outputXValues[0] && xValues[xValues.length - 1] <= outputXValues[outputXValues.length-1]){
             outputXYPairs.push([xValues[xValues.length - 1], yValues[xValues.length - 1]]);
         }
     }
@@ -79,9 +98,18 @@ function CubicHermiteSplineInterpolator(xValues, yValues, dydxValues, outputXVal
 
 function getCurves(graphingData, batteryIds, plotByBasePoints, domain, range, res=100){
     let outputXValues = []
-    if (domain[1]-domain[0] === 0){outputXValues=[domain[0]]}
+
+    let innerDomain = [...domain]
+    if (innerDomain[0] === null){innerDomain[0] = getMinForObjectKey(graphingData, "powers")}
+    if (innerDomain[1] === null){innerDomain[1] = getMaxForObjectKey(graphingData, "powers")}
+
+    let innerRange = [...range]
+    if (innerRange[0] === null){innerRange[0] = getMinForObjectKey(graphingData, "times")}
+    if (innerRange[1] === null){innerRange[1] = getMaxForObjectKey(graphingData, "times")}
+
+    if (innerDomain[0] === innerDomain[1]){outputXValues=[innerDomain[0]]}
     else{
-        for (let i=domain[0]; i <= domain[1]; i+=(domain[1]-domain[0])/res){
+        for (let i=innerDomain[0]; i <= innerDomain[1]; i+=(innerDomain[1]-innerDomain[0])/res){
             outputXValues.push(i)
         }
     }
@@ -92,13 +120,19 @@ function getCurves(graphingData, batteryIds, plotByBasePoints, domain, range, re
          const gd = graphingData[id]
 
         if (plotByBasePoints){
-            outputCurves[id] = gd.powers.map((power, index)=>{return {"power": power, "time": gd.times[index]}})
+            let preOutputCurve = gd.powers.map((power, index)=>{return {"power": power, "time": gd.times[index]}});
+            outputCurves[id] = preOutputCurve.reduce((finalizedCurve, pair)=>{
+                if (isInRange(pair["power"], innerDomain) && isInRange(pair["time"], innerRange)){
+                    finalizedCurve.push(pair)
+                }
+                return finalizedCurve
+            }, [])
             continue;
         }
        
         let outputXYPairs = CubicHermiteSplineInterpolator(gd.powers, gd.times, gd.dydx, outputXValues, true)
         let finalizedPairs = outputXYPairs.reduce((fittedPairs, pair)=>{
-            if (!(pair[1] < range[0] || pair[1] > range[1])) fittedPairs.push(pair);
+            if (!(pair[1] < innerRange[0] || pair[1] > innerRange[1])) fittedPairs.push(pair);
             return fittedPairs;
         }, [])
         outputCurves[id] = finalizedPairs .map(([x, y])=>{return {"power": x, "time": y}})
@@ -126,7 +160,6 @@ function Graph({batteryData, graphingData, selectedTableColumnNames, selectedTab
     const [plotByBasePoints, setPlotByBasePoints] = useState(false);
 
     function resize(e){
-        e.preventDefault();
         const form = e.target;
         setDomain([parseFloat(form.xmin.value), parseFloat(form.xmax.value)]);
         setRange([parseFloat(form.ymin.value), parseFloat(form.ymax.value)]);
@@ -136,6 +169,12 @@ function Graph({batteryData, graphingData, selectedTableColumnNames, selectedTab
         if (graphingData !== null){
             const c = genRandomColorsForIds(Object.keys(graphingData));
             setColors(c);
+
+            const maxPower = getMaxForObjectKey(graphingData, "powers")
+            const maxTime = getMaxForObjectKey(graphingData, "times")
+
+            setDomain([0, maxPower]);
+            setRange([0, maxTime]);
         }
     }, [graphingData])
 
@@ -145,7 +184,7 @@ function Graph({batteryData, graphingData, selectedTableColumnNames, selectedTab
             batteryIds.push(selectedBatteryId)
             setCurves(getCurves(graphingData, batteryIds, plotByBasePoints, domain, range))
         }
-    }, [graphingData, checked, selectedBatteryId, plotByBasePoints, domain])
+    }, [graphingData, checked, selectedBatteryId, plotByBasePoints, domain, range])
 
     useEffect(()=>{
         if (selectedBatteryId !== null && batteryData[selectedBatteryId] !== undefined){
@@ -167,60 +206,54 @@ function Graph({batteryData, graphingData, selectedTableColumnNames, selectedTab
         <>
             <div className='graph-table-container'>
                 <div className='graph-container'>
-                    <LineChart width={540} height={400}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis type="number" label={{value: "Power", position: "insideBottom", offset: 0}} dataKey="power" domain={domain}/>
-                        <YAxis type="number" label={{value: "Time", position: "insideLeft", offset: 22, angle: -90}} domain={range}/>
-                        {Object.entries(curves).map(([id, curve])=>{
-                            return (
-                                <Line key={"batteryLineChart#"+id} isAnimationActive={false}
-                                    stroke={id === selectedBatteryId? colorsForColorClasses[color] : colors[id]}
-                                    strokeWidth={id === selectedBatteryId ? 2 : 1}
-                                    dot={showPoints} data={curve} dataKey={"time"}
-                                />
-                            )
-                        })}
-                    </LineChart>
+                    <div className='graph-wrapper'>
+                        <ResponsiveContainer width={540} height={"100%"}>
+                            <LineChart>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis type="number" label={{value: "Power [W/cell]", position: "insideBottom", offset: 0}} dataKey="power" domain={domain}/>
+                                <YAxis type="number" label={{value: "Time [mins]", position: "insideLeft", offset: 22, angle: -90}} domain={range}/>
+                                {Object.entries(curves).map(([id, curve])=>{
+                                    return (
+                                        <Line key={"batteryLineChart#"+id} isAnimationActive={false}
+                                            stroke={id === selectedBatteryId? colorsForColorClasses[color] : colors[id]}
+                                            strokeWidth={id === selectedBatteryId ? 2 : 1}
+                                            dot={showPoints} data={curve} dataKey={"time"}
+                                        />
+                                    )
+                                })}
+                            </LineChart>
+                        </ResponsiveContainer>
+                    </div>
+                    
                     <div className='graph-controls-container'>
-                        <form onSubmit={(e)=>{resize(e);}}>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td><label htmlFor='xmin'>x min:</label></td>
-                                        <td><input className="number-input" type="number" id="xmin" step="0.01" ></input></td>
-                                        <td><label htmlFor='xmax'>x max:</label></td>
-                                        <td><input className="number-input" type="number" id="xmax" step="0.01" ></input></td>
-                                        <td>
-                                            <label htmlFor='pbbp'>plot by base points:</label>
-                                            <input type="checkbox" id="pbbp" checked={plotByBasePoints} onChange={(e)=>{
-                                                setPlotByBasePoints(e.target.checked);
-                                            }}/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><label htmlFor='ymin'>y min:</label></td>
-                                        <td><input className="number-input" type="number" id="ymin" step="0.01" ></input></td>
-                                        <td><label htmlFor='ymax'>y max:</label></td>
-                                        <td><input className="number-input" type="number" id="ymax" step="0.01" ></input></td>
-                                        <td>
-                                            <label htmlFor='sp'>show points:</label>
-                                            <input type="checkbox" id="sp" checked={showPoints} onChange={(e)=>{
-                                                setShowPoints(e.target.checked);
-                                            }}/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colSpan={4}>
-                                            <div className='button-container'>
-                                                <button type="submit" style={{margin: 0, padding: "6px 15px"}} className='data-entry-submit-button'>
-                                                    <div>update</div><img src='assets/calculate-button-icon.svg' width="18px" height="18px" alt='' />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </form>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td><label htmlFor='Pmin'>P min:</label></td>
+                                    <td><input className="number-input" type="number" id="Pmin" step="0.01" value={domain[0] === null ? "" : domain[0]} onChange={(e)=>{const parsedVal=parseFloat(e.target.value); setDomain([(isNaN(parsedVal) ? null : parsedVal), domain[1]])}}></input></td>
+                                    <td><label htmlFor='Pmax'>P max:</label></td>
+                                    <td><input className="number-input" type="number" id="Pmax" step="0.01" value={domain[1] === null ? "" : domain[1]} onChange={(e)=>{const parsedVal=parseFloat(e.target.value); setDomain([domain[0], (isNaN(parsedVal)? null : parsedVal)])}}></input></td>
+                                    <td>
+                                        <label htmlFor='pbbp'>plot by base points:</label>
+                                        <input type="checkbox" id="pbbp" checked={plotByBasePoints} onChange={(e)=>{
+                                            setPlotByBasePoints(e.target.checked);
+                                        }}/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label htmlFor='tmin'>t min:</label></td>
+                                    <td><input className="number-input" type="number" id="tmin" step="0.01" value={range[0] === null ? "" : range[0]} onChange={(e)=>{const parsedVal=parseFloat(e.target.value); setRange([(isNaN(parsedVal)? null : parsedVal), range[1]])}}></input></td>
+                                    <td><label htmlFor='tmax'>t max:</label></td>
+                                    <td><input className="number-input" type="number" id="tmax" step="0.01" value={range[1] === null ? "" : range[1]} onChange={(e)=>{const parsedVal=parseFloat(e.target.value); setRange([range[0], (isNaN(parsedVal)? null : parsedVal)])}}></input></td>
+                                    <td>
+                                        <label htmlFor='sp'>show points:</label>
+                                        <input type="checkbox" id="sp" checked={showPoints} onChange={(e)=>{
+                                            setShowPoints(e.target.checked);
+                                        }}/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div className='graph-batt-list-table-container'>
