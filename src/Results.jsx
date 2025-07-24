@@ -4,7 +4,7 @@ import Table from "./Table"
 import Graph from "./Graph"
 import Validation from './Validation'
 
-function Results({data, columnNames, columnSorts, selectedBatteryId, setSelectedBatteryId, checked, setChecked, selectedCurrency, currencies, headerNum=2, headerColor='maroon'}){
+function Results({data, columnNames, columnSorts, selectedBatteryId, setSelectedBatteryId, checked, setChecked, selectedCurrency, currencies, headerNum=2, headerColor='maroon', dotOrAsymptotes=[null, null]}){
     const [displayedComponentNum, setDisplayedComponentNum] = useState(1);
     const [batteryData, setBatteryData] = useState(null);
     const [graphingData, setGraphingData] = useState(null);
@@ -26,19 +26,28 @@ function Results({data, columnNames, columnSorts, selectedBatteryId, setSelected
                         <div className={"option-container " + ( displayedComponentNum === 2 ? 'checked' : '')} onClick={()=>{setDisplayedComponentNum(2)}}>Graph</div>
                     </div>
                 </div>
-                <div className='results-content-container' style={{display: (displayedComponentNum === 1 ? 'block' : 'none')}}>
+                <div className='results-content-container' 
+                    style={{
+                        visibility: displayedComponentNum === 1 ? 'visible' : 'hidden',
+                        position: displayedComponentNum === 1 ? 'static' : 'absolute',
+                    }}>
                     <Table data={batteryData} columnNames={columnNames} columnSorts={columnSorts} 
                     selectedBatteryId={selectedBatteryId} setSelectedBatteryId={setSelectedBatteryId} 
                     outerChecked={checked} outerSetChecked={setChecked} 
                     validationParams={[currencies, selectedCurrency]} validation={Validation} 
                     color={headerColor}/>
                 </div>
-                <div className='results-content-container' style={{display: (displayedComponentNum === 2 ? 'block' : 'none'), overflowY: 'hidden'}}>
+                <div className='results-content-container' 
+                    style={{
+                        visibility: displayedComponentNum === 2 ? 'visible' : 'hidden',
+                        position: displayedComponentNum === 2 ? 'static' : 'absolute', overflowY: 'hidden',
+                    }}>
                     <Graph batteryData={batteryData} graphingData={graphingData} selectedTableColumnNames={columnNames} selectedTableColumnSorts={columnSorts}
                     selectedTableValidation={Validation} selectedTableValidationParams={[currencies, selectedCurrency]}
                     selectedBatteryId={selectedBatteryId} setSelectedBatteryId={setSelectedBatteryId}
                     checked={checked} setChecked={setChecked} 
-                    color={headerColor}/>
+                    color={headerColor}
+                    dotOrAsymptotes={dotOrAsymptotes}/>
                 </div>
             </div>
         </>

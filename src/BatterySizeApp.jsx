@@ -19,6 +19,9 @@ function BatterySizeApp() {
 
   const [checked, setChecked] = useState({});
 
+  const [calcPower, setCalcPower] = useState(null);
+  const [calcTime, setCalcTime] = useState(null);
+
   const formFieldsParams = [
     {id: 'power', label: 'S of load', units: 'kVA', inputParams: {className:'number-input', type:'number', step:'any', name:'power'}},
     {id: 'cos_fi', label: 'cos(fi) of load', units: '-', inputParams: {className:'number-input', type:'number', step:'0.01', max:'1', name:'cos_fi', defaultValue: 1}},
@@ -55,7 +58,7 @@ function BatterySizeApp() {
     let preCalcFields = [...calculatedFieldsParams];
     preCalcFields[0].value = powerW/1000; preCalcFields[1].value = power_el;
     setCalculatedFieldsParams(preCalcFields);
-
+    setCalcPower(power_el); setCalcTime(parseFloat(formData.dc_time));
 
     await api.calcBatteries(formData).then(result => { if (result === undefined){result = null}; setData(result);})
 
@@ -75,7 +78,7 @@ function BatterySizeApp() {
           <div className='battsize-page-header'><p>Battery Size</p><img src='assets/battery-size-icon.svg' alt='' width='35px' height='33px' /></div>
           <div className='battsize-page-container'>
             <Form formFieldsParams={formFieldsParams} calculatedFieldsParams={calculatedFieldsParams} handleSubmit={handleSubmit}/>
-            <Results data={data} columnNames={columnNames} columnSorts={columnSorts} selectedBatteryId={selectedBatteryId} setSelectedBatteryId={setSelectedBatteryId} checked={checked} setChecked={setChecked} selectedCurrency={selectedCurrency} currencies={currencies}/>
+            <Results data={data} columnNames={columnNames} columnSorts={columnSorts} selectedBatteryId={selectedBatteryId} setSelectedBatteryId={setSelectedBatteryId} checked={checked} setChecked={setChecked} selectedCurrency={selectedCurrency} currencies={currencies} dotOrAsymptotes={[calcPower, calcTime]}/>
             <AdditionalInfoCard data={data} selectedBatteryId={selectedBatteryId} setSelectedCurrency={setSelectedCurrency} selectedCurrency={selectedCurrency} currencies={currencies}/>
           </div>
       </>

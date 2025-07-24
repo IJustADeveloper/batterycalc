@@ -1,6 +1,6 @@
 import {useState, useEffect, useLayoutEffect, useRef} from 'react';
 
-function Table({data, columnNames, columnSorts, selectedBatteryId, setSelectedBatteryId, outerChecked, outerSetChecked, validationParams=[], validation, color='maroon'}){
+function Table({data, columnNames, columnSorts, selectedBatteryId, setSelectedBatteryId, outerChecked, outerSetChecked, validationParams=[], validation, color='maroon', checkboxColors=null}){
 
     const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
     const [checkboxSortConfig, setCheckboxSortConfig] = useState({direction: null});
@@ -115,7 +115,7 @@ function Table({data, columnNames, columnSorts, selectedBatteryId, setSelectedBa
             })
 
             cells.push(
-                <td name={'checkbox'} key={b_id+':checkbox'}><input onChange={(e) => {
+                <td name={'checkbox'} key={b_id+':checkbox'} style={{backgroundColor: checkboxColors !== null && checkboxColors[b_id] !== undefined ? checkboxColors[b_id] : null}}><input onChange={(e) => {
                             if (e.target.checked){
                                 setChecked({...checked, [b_id] : true})
                             }

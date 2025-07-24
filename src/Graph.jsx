@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip, ResponsiveContainer } from 'recharts'
+import { LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip, ResponsiveContainer, Dot} from 'recharts'
 import './styles/graph.css'
 
 import Table from './Table'
@@ -19,6 +19,7 @@ function getMinForObjectKey(obj, key){
     }));
 }
 
+// checks if a number (n) is inside a range (range in form of [firstNum, secondNum]), also if either firstNum or secondNum is null, it will be treated as there is no boundary 
 function isInRange(n, range){
     let left = (isNaN(range[0]) || range[0] === null ? true : n >= range[0]);
     let right = (isNaN(range[1]) || range[1] === null ? true : n <= range[1]);
@@ -52,6 +53,13 @@ function sortedIndex(array, value) {
         else high = mid;
     }
     return low;
+}
+
+function validateBoundaries(domain, range){
+    let res = [true, true]
+    if (domain[0] === null || domain[1] === null || domain[0] >= domain[1]) res[0] = false;
+    if (range[0] === null || range[1] === null || range[0] >= range[1]) res[1] = false;
+    return res
 }
 
 function CubicHermiteSplineInterpolator(xValues, yValues, dydxValues, outputXValues, includeBasePoints){
@@ -139,31 +147,19 @@ function getCurves(graphingData, batteryIds, plotByBasePoints, domain, range, re
     }
 
     return outputCurves
-    
-    return (Object.fromEntries(Object.entries(graphingData).map(([id, gd])=>{
-        let outputXYPairs = CubicHermiteSplineInterpolator(gd.powers, gd.times, gd.dydx, outputXValues)
-        return [id, outputXYPairs.map(([x, y])=>{return {"power": x, "time": y}})] 
-        return [id, gd.powers.map((power, index)=>{return {"power": power, "time": gd.times[index]}})]
-    })))
 }
 
-function Graph({batteryData, graphingData, selectedTableColumnNames, selectedTableColumnSorts, selectedTableValidation, selectedTableValidationParams, selectedBatteryId, setSelectedBatteryId, checked, setChecked, color='maroon'}){
+function Graph({batteryData, graphingData, selectedTableColumnNames, selectedTableColumnSorts, selectedTableValidation, selectedTableValidationParams, selectedBatteryId, setSelectedBatteryId, checked, setChecked, color='maroon', dotOrAsymptotes=[null, null]}){
 
     const [selectedTableData, setSelectedTableData] = useState(null);
     const [curves, setCurves] = useState({});
     const [colors, setColors] = useState({});
 
-    const [domain, setDomain] = useState([0,1]);
-    const [range, setRange] = useState([0,0]);
+    const [domain, setDomain] = useState([null, null]);
+    const [range, setRange] = useState([null, null]);
 
     const [showPoints, setShowPoints] = useState(false);
     const [plotByBasePoints, setPlotByBasePoints] = useState(false);
-
-    function resize(e){
-        const form = e.target;
-        setDomain([parseFloat(form.xmin.value), parseFloat(form.xmax.value)]);
-        setRange([parseFloat(form.ymin.value), parseFloat(form.ymax.value)]);
-    }
 
     useEffect(()=>{
         if (graphingData !== null){
@@ -179,7 +175,8 @@ function Graph({batteryData, graphingData, selectedTableColumnNames, selectedTab
     }, [graphingData])
 
     useEffect(()=>{
-        if (graphingData !== null){
+        let areBoundariesValid = validateBoundaries(domain, range);
+        if (graphingData !== null && areBoundariesValid[0] && areBoundariesValid[0]){
             let batteryIds = Object.keys(checked)
             batteryIds.push(selectedBatteryId)
             setCurves(getCurves(graphingData, batteryIds, plotByBasePoints, domain, range))
@@ -207,26 +204,59 @@ function Graph({batteryData, graphingData, selectedTableColumnNames, selectedTab
             <div className='graph-table-container'>
                 <div className='graph-container'>
                     <div className='graph-wrapper'>
-                        <ResponsiveContainer width={540} height={"100%"}>
-                            <LineChart>
+                        <ResponsiveContainer width={"100%"} height={"100%"}>
+                            <LineChart minWidth={0} margin={{top: 20, right: 20, left: 10, bottom: 20}}>
                                 <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis type="number" label={{value: "Power [W/cell]", position: "insideBottom", offset: 0}} dataKey="power" domain={domain}/>
-                                <YAxis type="number" label={{value: "Time [mins]", position: "insideLeft", offset: 22, angle: -90}} domain={range}/>
-                                {Object.entries(curves).map(([id, curve])=>{
-                                    return (
-                                        <Line key={"batteryLineChart#"+id} isAnimationActive={false}
-                                            stroke={id === selectedBatteryId? colorsForColorClasses[color] : colors[id]}
-                                            strokeWidth={id === selectedBatteryId ? 2 : 1}
-                                            dot={showPoints} data={curve} dataKey={"time"}
-                                        />
-                                    )
-                                })}
+                                <XAxis type="number" label={{value: "Power [W/cell]", position: "bottom", offset: 0}} dataKey="power" domain={validateBoundaries(domain, range)[0] ? domain : null}/>
+                                <YAxis type="number" label={{value: "Time [mins]", position: "insideLeft", offset: 10, angle: -90}} domain={validateBoundaries(domain, range)[1] ? range : null}/>
+                                { !(validateBoundaries(domain, range)).every((v)=>v) ? null :
+                                    <>
+                                        {Object.entries(curves).map(([id, curve])=>{
+                                            return (
+                                                <Line key={"batteryLineChart#"+id} isAnimationActive={false}
+                                                    stroke={id === selectedBatteryId? colorsForColorClasses[color] : colors[id]}
+                                                    strokeWidth={id === selectedBatteryId ? 2 : 1}
+                                                    dot={showPoints} data={curve} dataKey={"time"}
+                                                />
+                                            )
+                                        })}
+                                        {
+                                            dotOrAsymptotes[0] !== null && isInRange(dotOrAsymptotes[0], domain)
+                                            ? <Line
+                                                isAnimationActive={false}
+                                                stroke={colorsForColorClasses[color]}
+                                                strokeDasharray="4 4"
+                                                dot={false} data={[{"power": dotOrAsymptotes[0], "time": range[0]}, {"power": dotOrAsymptotes[0], "time": range[1]}]} dataKey={'time'}
+                                            />
+                                            : null
+                                        }
+                                        {
+                                            dotOrAsymptotes[1] !== null && isInRange(dotOrAsymptotes[1], range)
+                                            ? <Line
+                                                isAnimationActive={false}
+                                                stroke={colorsForColorClasses[color]}
+                                                strokeDasharray="4 4"
+                                                dot={false} data={[{"power": domain[0], "time": dotOrAsymptotes[1]}, {"power": domain[1], "time": dotOrAsymptotes[1]}]} dataKey={'time'}
+                                            />
+                                            : null
+                                        }
+                                        {
+                                            dotOrAsymptotes[0] !== null && dotOrAsymptotes[1] !== null && isInRange(dotOrAsymptotes[0], domain) && isInRange(dotOrAsymptotes[1], range) 
+                                            ? <Line
+                                                isAnimationActive={false}
+                                                stroke={colorsForColorClasses[color]}
+                                                dot={true} data={[{"power": dotOrAsymptotes[0], "time": dotOrAsymptotes[1]}]} dataKey={'time'}
+                                            />
+                                            : null
+                                        }
+                                    </>
+                                }
                             </LineChart>
                         </ResponsiveContainer>
                     </div>
                     
-                    <div className='graph-controls-container'>
-                        <table>
+                    <div className='graph-controls-wrapper'>
+                        <table className='graph-controls-table'>
                             <tbody>
                                 <tr>
                                     <td><label htmlFor='Pmin'>P min:</label></td>
@@ -261,7 +291,7 @@ function Graph({batteryData, graphingData, selectedTableColumnNames, selectedTab
                     selectedBatteryId={selectedBatteryId} setSelectedBatteryId={setSelectedBatteryId}
                     outerChecked={checked} outerSetChecked={setChecked}
                     validation={(ents)=>{return [ents, {'batteryGraphListView': 'td-left'}]}}
-                    color={color}/>
+                    color={color} checkboxColors={colors}/>
                 </div>
             </div>
             <div className='graph-selected-batt-table'>

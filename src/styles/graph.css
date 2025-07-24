@@ -26,6 +26,11 @@
     border-top: 1px solid #EEF2F4;
 }
 
-.graph-controls-container{
-    width: 100%;
+.graph-controls-wrapper{
+    width: calc(100% - 50px);
+    margin:  10px 0  20px 50px;
+}
+
+.graph-controls-table td{
+    padding: 0 5px;
 }

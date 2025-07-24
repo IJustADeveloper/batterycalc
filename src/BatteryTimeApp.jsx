@@ -26,6 +26,8 @@ function BatteryTimeApp(){
 
     const [pickedNames, setPickedNames] = useState({});
 
+    const [calcPower, setCalcPower] = useState(null);
+
     const formFieldsParams = [
         {id: 'powerS', label: 'S of load', units: 'kVA', inputParams: {className:'number-input', type:'number', step:'any', name:'powerS'}},
         {id: 'cos_fi', label: 'cos(fi) of load', units: '-', inputParams: {className:'number-input', type:'number', step:'0.01', max:'1', name:'cos_fi', defaultValue: 1}},
@@ -79,6 +81,7 @@ function BatteryTimeApp(){
         let preCalcFields = [...calculatedFieldsParams];
         preCalcFields[0].value = formData.power_el;
         setCalculatedFieldsParams(preCalcFields);
+        setCalcPower(power_el);
 
         setChecked({});
 
@@ -101,7 +104,7 @@ function BatteryTimeApp(){
                     <BatteryChoiceForm names={names} pickedNames={pickedNames} setPickedNames={setPickedNames} />
                     <Form formFieldsParams={formFieldsParams} calculatedFieldsParams={calculatedFieldsParams} handleSubmit={handleSubmit} handleChange={handleChangeForm} headerNum={2} headerColor='yellow'/>
                 </div>
-                <Results data={data} columnNames={columnNames} columnSorts={columnSorts} selectedBatteryId={selectedBatteryId} setSelectedBatteryId={setSelectedBatteryId} checked={checked} setChecked={setChecked} selectedCurrency={selectedCurrency} currencies={currencies} headerNum={3} headerColor='cyan'/>
+                <Results data={data} columnNames={columnNames} columnSorts={columnSorts} selectedBatteryId={selectedBatteryId} setSelectedBatteryId={setSelectedBatteryId} checked={checked} setChecked={setChecked} selectedCurrency={selectedCurrency} currencies={currencies} headerNum={3} headerColor='cyan' dotOrAsymptotes={[calcPower, null]}/>
                 <AdditionalInfoCard data={data} selectedBatteryId={selectedBatteryId} setSelectedCurrency={setSelectedCurrency} selectedCurrency={selectedCurrency} currencies={currencies} headerColor='cyan'/>
             </div>
             </>
