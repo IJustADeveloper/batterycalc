@@ -265,7 +265,7 @@ function Graph({batteryData, graphingData, selectedTableColumnNames, selectedTab
                                                         strokeWidth={id === selectedBatteryId ? 2 : 1}
                                                         dot={showPoints} data={curve} dataKey={"time"}
                                                     />
-                                                    { solutionPoints[id] === undefined ? null :
+                                                    { solutionPoints[id] === undefined || !isInRange(solutionPoints[id].power, domain) || !isInRange(solutionPoints[id].time, range) ? null :
                                                         <Line key={"batterySolutionPoint#"+id} isAnimationActive={false}
                                                             stroke={id === selectedBatteryId? colorsForColorClasses[color] : colors[id]}
                                                             dot={true} data={[solutionPoints[id]]} dataKey={"time"} 
