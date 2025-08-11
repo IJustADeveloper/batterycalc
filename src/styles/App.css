@@ -71,6 +71,11 @@
   color: #B81668;
 }
 
+.vert-navbar-item.chosen.upstime{
+  border-left-color: #FEC909;
+  color: #FEC909;
+}
+
 /*-------------------------------------------------------------*/
 
 .data-entry-container{

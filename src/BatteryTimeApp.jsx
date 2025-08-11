@@ -81,7 +81,7 @@ function BatteryTimeApp(){
         let preCalcFields = [...calculatedFieldsParams];
         preCalcFields[0].value = formData.power_el;
         setCalculatedFieldsParams(preCalcFields);
-        setCalcPower(power_el);
+        setCalcPower(formData.power_el);
 
         setChecked({});
 

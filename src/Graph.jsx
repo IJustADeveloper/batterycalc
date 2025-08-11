@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip, ResponsiveContainer, Dot} from 'recharts'
+import { LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip, ResponsiveContainer, Dot, Scatter} from 'recharts'
 import './styles/graph.css'
 
 import Table from './Table'
@@ -24,6 +24,10 @@ function isInRange(n, range){
     let left = (isNaN(range[0]) || range[0] === null ? true : n >= range[0]);
     let right = (isNaN(range[1]) || range[1] === null ? true : n <= range[1]);
     return (left && right);
+}
+
+function isInf(n){
+    return n === "inf" || n === "-inf"
 }
 
 function randomColorGen(){
@@ -62,7 +66,22 @@ function validateBoundaries(domain, range){
     return res
 }
 
-function CubicHermiteSplineInterpolator(xValues, yValues, dydxValues, outputXValues, includeBasePoints){
+function CubicHermiteSpline(x0, x1, y0, y1, m0, m1, x){
+    if (x0 === x1){return y0}
+    if (isInf(m0) || isInf(m1)){return y0 + (y1-y0)/(x1-x0)*(x-x0)}
+
+    const h = x1-x0;
+    const t = (x - x0)/(h);
+        
+    const h00 = 2*(t**3) - 3*(t**2) + 1;
+    const h10 = t**3 - 2*(t**2) + t;
+    const h01 = (-2)*(t**3) + 3*(t**2);
+    const h11 = t**3 - t**2;
+
+    return h00*y0 + h10*h*m0 + h01*y1 + h11*h*m1;
+}
+
+function CubicHermiteSplineInterpolator(xValues, yValues, dydxValues, outputXValues, includeBasePoints=false){
     let outputXYPairs = []
 
     let previousIndex = 0
@@ -70,28 +89,20 @@ function CubicHermiteSplineInterpolator(xValues, yValues, dydxValues, outputXVal
 
         if (outputX < xValues[0] || outputX > xValues[xValues.length -1]) return;
 
-        const rightPointIndex = sortedIndex(xValues, outputX);
+        // RPI = RightPointIndex
+        const RPI = sortedIndex(xValues, outputX);
 
         if (includeBasePoints){
-            if (previousIndex !== rightPointIndex){
-                for (previousIndex; previousIndex<=rightPointIndex-1; previousIndex++){
+            if (previousIndex !== RPI){
+                for (previousIndex; previousIndex<=RPI-1; previousIndex++){
                     if(xValues[previousIndex] >= outputXValues[0] && xValues[previousIndex] <= outputXValues[outputXValues.length-1]){
                         outputXYPairs.push([xValues[previousIndex], yValues[previousIndex]]);
                     }
                 }
             }
         }
-
-        const h = xValues[rightPointIndex]-xValues[rightPointIndex - 1];
-        const t = (outputX - xValues[rightPointIndex - 1])/(h);
         
-        const h00 = 2*(t**3) - 3*(t**2) + 1;
-        const h10 = t**3 - 2*(t**2) + t;
-        const h01 = (-2)*(t**3) + 3*(t**2);
-        const h11 = t**3 - t**2;
-
-        const outputY = h00*yValues[rightPointIndex-1] + h10*h*dydxValues[rightPointIndex-1] + h01*yValues[rightPointIndex] + h11*h*dydxValues[rightPointIndex];
-
+        const outputY = CubicHermiteSpline(xValues[RPI - 1],  xValues[RPI], yValues[RPI-1], yValues[RPI], dydxValues[RPI - 1], dydxValues[RPI], outputX)
         outputXYPairs.push([outputX, outputY]);
     })
 
@@ -149,10 +160,21 @@ function getCurves(graphingData, batteryIds, plotByBasePoints, domain, range, re
     return outputCurves
 }
 
+function getSolutionPoints(graphingData, solutionPower){
+    let solutionPoints = {}
+    for (let id in graphingData){
+        let gd = graphingData[id]
+        let solutionPoint = CubicHermiteSplineInterpolator(gd.powers, gd.times, gd.dydx, [solutionPower], false)
+        solutionPoints[id] = {"power": solutionPower, "time": solutionPoint[0][1]}
+    }
+    return solutionPoints
+}
+
 function Graph({batteryData, graphingData, selectedTableColumnNames, selectedTableColumnSorts, selectedTableValidation, selectedTableValidationParams, selectedBatteryId, setSelectedBatteryId, checked, setChecked, color='maroon', dotOrAsymptotes=[null, null]}){
 
     const [selectedTableData, setSelectedTableData] = useState(null);
     const [curves, setCurves] = useState({});
+    const [solutionPoints, setSolutionPoints] = useState({});
     const [colors, setColors] = useState({});
 
     const [domain, setDomain] = useState([null, null]);
@@ -167,7 +189,11 @@ function Graph({batteryData, graphingData, selectedTableColumnNames, selectedTab
             setColors(c);
 
             const maxPower = getMaxForObjectKey(graphingData, "powers")
-            const maxTime = getMaxForObjectKey(graphingData, "times")
+            const maxTime = getMaxForObjectKey(graphingData, "times")   
+
+            if (dotOrAsymptotes[0] !== null){
+                setSolutionPoints(getSolutionPoints(graphingData, dotOrAsymptotes[0]));
+            }
 
             setDomain([0, maxPower]);
             setRange([0, maxTime]);
@@ -211,15 +237,6 @@ function Graph({batteryData, graphingData, selectedTableColumnNames, selectedTab
                                 <YAxis type="number" label={{value: "Time [mins]", position: "insideLeft", offset: 10, angle: -90}} domain={validateBoundaries(domain, range)[1] ? range : null}/>
                                 { !(validateBoundaries(domain, range)).every((v)=>v) ? null :
                                     <>
-                                        {Object.entries(curves).map(([id, curve])=>{
-                                            return (
-                                                <Line key={"batteryLineChart#"+id} isAnimationActive={false}
-                                                    stroke={id === selectedBatteryId? colorsForColorClasses[color] : colors[id]}
-                                                    strokeWidth={id === selectedBatteryId ? 2 : 1}
-                                                    dot={showPoints} data={curve} dataKey={"time"}
-                                                />
-                                            )
-                                        })}
                                         {
                                             dotOrAsymptotes[0] !== null && isInRange(dotOrAsymptotes[0], domain)
                                             ? <Line
@@ -240,6 +257,23 @@ function Graph({batteryData, graphingData, selectedTableColumnNames, selectedTab
                                             />
                                             : null
                                         }
+                                        {Object.entries(curves).map(([id, curve])=>{
+                                            return (
+                                                <>
+                                                    <Line key={"batteryLineChart#"+id} isAnimationActive={false}
+                                                        stroke={id === selectedBatteryId? colorsForColorClasses[color] : colors[id]}
+                                                        strokeWidth={id === selectedBatteryId ? 2 : 1}
+                                                        dot={showPoints} data={curve} dataKey={"time"}
+                                                    />
+                                                    { solutionPoints[id] === undefined ? null :
+                                                        <Line key={"batterySolutionPoint#"+id} isAnimationActive={false}
+                                                            stroke={id === selectedBatteryId? colorsForColorClasses[color] : colors[id]}
+                                                            dot={true} data={[solutionPoints[id]]} dataKey={"time"} 
+                                                        />
+                                                    }
+                                                </>
+                                            )
+                                        })}
                                         {
                                             dotOrAsymptotes[0] !== null && dotOrAsymptotes[1] !== null && isInRange(dotOrAsymptotes[0], domain) && isInRange(dotOrAsymptotes[1], range) 
                                             ? <Line
@@ -284,7 +318,7 @@ function Graph({batteryData, graphingData, selectedTableColumnNames, selectedTab
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
+                    </div> 
                 </div>
                 <div className='graph-batt-list-table-container'>
                     <Table data={listTableData} columnNames={listTableColumnNames} columnSorts={listTableColumnSorts} 
