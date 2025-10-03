@@ -4,9 +4,9 @@ import './styles/App.css'
 import {Route, Routes, useLocation, useNavigate} from 'react-router-dom'
 
 
-import BatterySizeApp from './BatterySizeApp'
-import BatteryTimeApp from './BatteryTimeApp'
-import UPSTimeApp from './UPSTimeApp'
+import BatterySizeApp from './pages/BatterySizeApp'
+import BatteryTimeApp from './pages/BatteryTimeApp'
+import UPSTimeApp from './pages/UPSTimeApp'
 
 
 function BattsizeNavbarItem({isChosen}){

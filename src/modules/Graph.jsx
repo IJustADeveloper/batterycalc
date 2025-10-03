@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip, ResponsiveContainer, Dot, Scatter} from 'recharts'
-import './styles/graph.css'
+import '../styles/graph.css'
 
-import Table from './Table'
+import Table from '../components/Table'
 
 const colorsForColorClasses = {"maroon": "#B81668", "cyan": "#0076A4", "yellow": "#FEC909"};
 
@@ -165,7 +165,9 @@ function getSolutionPoints(graphingData, solutionPower){
     for (let id in graphingData){
         let gd = graphingData[id]
         let solutionPoint = CubicHermiteSplineInterpolator(gd.powers, gd.times, gd.dydx, [solutionPower], false)
-        solutionPoints[id] = {"power": solutionPower, "time": solutionPoint[0][1]}
+        if (solutionPoint[0] !== undefined){
+            solutionPoints[id] = {"power": solutionPower, "time": solutionPoint[0][1]}
+        }
     }
     return solutionPoints
 }

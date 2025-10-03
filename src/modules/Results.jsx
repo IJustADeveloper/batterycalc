@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 
-import Table from "./Table"
+import Table from "../components/Table"
 import Graph from "./Graph"
-import Validation from './Validation'
+import Validation from '../Validation'
 
 function Results({data, columnNames, columnSorts, selectedBatteryId, setSelectedBatteryId, checked, setChecked, selectedCurrency, currencies, headerNum=2, headerColor='maroon', dotOrAsymptotes=[null, null]}){
     const [displayedComponentNum, setDisplayedComponentNum] = useState(1);

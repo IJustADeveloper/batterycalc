@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
-import AdditionalInfoCard from './AdditionalInfoCard.jsx'
-import Api from './Api.jsx'
-import Sorts from './Sorts.jsx'
+import AdditionalInfoCard from '../modules/AdditionalInfoCard.jsx'
+import Api from '../Api.jsx'
+import Sorts from '../Sorts.jsx'
 
-import BatteryChoiceForm from './BatteryChoiceForm.jsx'
-import Form from './Form.jsx'
-import Results from './Results.jsx'
+import BatteryChoiceForm from '../components/BatteryChoiceForm.jsx'
+import Form from '../components/Form.jsx'
+import Results from '../modules/Results.jsx'
 
 
 function BatteryTimeApp(){

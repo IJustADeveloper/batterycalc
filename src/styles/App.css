@@ -213,7 +213,7 @@
 .battsize-results-container{
   margin: 0 0 0 30px;
   width: 812px;
-  height: 772px;
+  height: 757px;
   display: flex;
   color: #535C69;
   flex-direction: column;
@@ -221,7 +221,7 @@
 
 .results-content-container{
   width: 100%;
-  height: 662px;
+  height: 727px;
   box-sizing: border-box;
   border: 1px solid #EEF2F4;
   border-top: none;

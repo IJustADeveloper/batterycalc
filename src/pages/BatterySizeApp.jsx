@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
-import Form from './Form.jsx'
-import Results from './Results.jsx'
-import AdditionalInfoCard from './AdditionalInfoCard.jsx'
-import Api from './Api.jsx'
-import Sorts from './Sorts.jsx'
+import Form from '../components/Form.jsx'
+import Results from '../modules/Results.jsx'
+import AdditionalInfoCard from '../modules/AdditionalInfoCard.jsx'
+import Api from '../Api.jsx'
+import Sorts from '../Sorts.jsx'
 
 
 function BatterySizeApp() {

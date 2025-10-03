@@ -1,6 +1,6 @@
 import axios from "axios";
-const API_host = 'http://localhost:8000/api'
-//const API_host = 'https://momonga.pythonanywhere.com/api'
+//const API_host = 'http://localhost:8000/api'
+const API_host = 'https://momonga.pythonanywhere.com/api'
 
 class Api{
 
