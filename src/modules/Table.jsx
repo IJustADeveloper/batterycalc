@@ -1,14 +1,10 @@
-import {useState, useEffect, useLayoutEffect, useRef} from 'react';
+import { useState } from 'react';
+import { checkedSort, getNextSortDirection } from '../utils/Sorts';
 
-function Table({data, columnNames, columnSorts, selectedBatteryId, setSelectedBatteryId, outerChecked, outerSetChecked, validationParams=[], validation, color='maroon', checkboxColors=null}){
+function Table({data, columnNames, columnClasses, columnSorts, selectedBatteryId, setSelectedBatteryId, checked, setChecked, format, color='maroon', checkboxColors=null}){
 
     const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
     const [checkboxSortConfig, setCheckboxSortConfig] = useState({direction: null});
-
-    const [innerChecked, innerSetChecked] = useState({});
-
-    const checked = outerChecked ?? innerChecked
-    const setChecked = outerSetChecked ?? innerSetChecked
 
     const highlight = function(e){
         let tr = e.target.parentElement
@@ -16,59 +12,19 @@ function Table({data, columnNames, columnSorts, selectedBatteryId, setSelectedBa
         if (tr.tagName === 'TR'){
             let battery_id = tr.id
 
-            let previousTr = document.getElementById(selectedBatteryId)
-            if (previousTr){
-                previousTr.className = ''
-            }
-            //tr.className = 'highlight ' + color
-            
             if (battery_id !== selectedBatteryId){
                 setSelectedBatteryId(battery_id)
             }else(setSelectedBatteryId(null))
         }   
-        
     }
-
-    /*useEffect(()=>{
-        let tr = document.getElementById(selectedBatteryId)
-        if (tr !== null){
-            tr.className = 'highlight ' + color
-        }
-        
-    }, [selectedBatteryId])*/
-
-    const getNextSortDirection = (currentDirection) => {
-        if (currentDirection === null) return 'ascending';
-        if (currentDirection === 'ascending') return 'descending';
-        return null;
-    };
 
     const applySortChecked = function(){
         const direction = getNextSortDirection(checkboxSortConfig.direction);
         setCheckboxSortConfig({ direction });
     }
 
-    const sortChecked = function(ents){
-        if (checkboxSortConfig.direction === null) {return ents}
-
-        ents.sort((a, b) => {
-            let valA = checked[a[0]]
-            let valB = checked[b[0]]
-            if (valA === valB) {return 0}
-
-            if (checkboxSortConfig.direction === 'ascending') {
-                return valB === undefined ? 1 : -1;
-            }
-            if (checkboxSortConfig.direction === 'descending') {
-                return valA === undefined ? 1 : -1;
-            }
-        })
-
-        return ents
-    }
-
     const applySort = function(key){
-        const direction = key === sortConfig.key ? getNextSortDirection(sortConfig.direction) : 'ascending';
+        const direction = key === sortConfig.key ? getNextSortDirection(sortConfig.direction) : getNextSortDirection(null);
         setSortConfig({ key, direction });
     }
 
@@ -97,13 +53,12 @@ function Table({data, columnNames, columnSorts, selectedBatteryId, setSelectedBa
     
     let rows = []
     if (data !== null){
-        let columnClasses = {};
         let ents = Object.entries(data);
 
         ents = sortByColumn(structuredClone(ents));
-        ents = sortChecked(structuredClone(ents));
+        ents = checkedSort(structuredClone(ents), checkboxSortConfig.direction, checked);
 
-        [ents, columnClasses] = validation(ents, ...validationParams);
+        ents = format(ents);
 
         rows = ents.map(([b_id, row], b_ind, b_a)=>{
             let cells = Object.entries(row).map(([key, param], p_ind, a)=>{
@@ -115,17 +70,8 @@ function Table({data, columnNames, columnSorts, selectedBatteryId, setSelectedBa
             })
 
             cells.push(
-                <td name={'checkbox'} key={b_id+':checkbox'} style={{backgroundColor: checkboxColors !== null && checkboxColors[b_id] !== undefined ? checkboxColors[b_id] : null}}><input onChange={(e) => {
-                            if (e.target.checked){
-                                setChecked({...checked, [b_id] : true})
-                            }
-                            else{
-                                let preChecked = {...checked}
-                                delete preChecked[b_id]
-                                setChecked({...preChecked})
-                            }
-                        }
-                    } checked={checked[b_id] === undefined ? false : true} type='checkbox'/>
+                <td name={'checkbox'} key={b_id+':checkbox'} style={{backgroundColor: checkboxColors !== null && checkboxColors[b_id] !== undefined ? checkboxColors[b_id] : null}}>
+                    <input onChange={() => {setChecked(b_id)}} checked={checked.has(b_id) ? true : false} type='checkbox'/>
                 </td>
             )
 

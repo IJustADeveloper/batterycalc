@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { LineChart, XAxis, YAxis, CartesianGrid, Line, Tooltip, ResponsiveContainer, Dot, Scatter} from 'recharts'
 import '../styles/graph.css'
 
-import Table from '../components/Table'
+import Table from './Table'
 
 const colorsForColorClasses = {"maroon": "#B81668", "cyan": "#0076A4", "yellow": "#FEC909"};
 

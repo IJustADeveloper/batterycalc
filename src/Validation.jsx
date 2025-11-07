@@ -49,8 +49,7 @@ function Validation(ents, currencies, selectedCurrency){
         }
 
         return [b_id, row]
-    })
-
+    }) 
     let column_classes = {'vendor': 'td-left', 'series': 'td-left','model': 'td-left', 'battery_id': 'hide-td'}
 
     return [arr, column_classes]

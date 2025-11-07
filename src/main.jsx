@@ -3,11 +3,17 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { HashRouter as Router } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import appStore from './store/appStore.js'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Router>
-      <App />
-    </Router>
+    <Provider store={appStore}>
+      <Router>
+        
+          <App />
+        
+      </Router>
+    </Provider>
   </StrictMode>,
 )

@@ -3,7 +3,6 @@ import './styles/App.css'
 
 import {Route, Routes, useLocation, useNavigate} from 'react-router-dom'
 
-
 import BatterySizeApp from './pages/BatterySizeApp'
 import BatteryTimeApp from './pages/BatteryTimeApp'
 import UPSTimeApp from './pages/UPSTimeApp'
@@ -87,18 +86,20 @@ function App() {
 
   return (
         <>
-        <div className='after-root'>
-          <div className='vert-navbar'>
-            <BattsizeNavbarItem isChosen={location.pathname === "/batterysize/"}/>
-            <BatttimeNavbarItem isChosen={location.pathname === "/batterytime/"}/>
+          <div className='after-root'>
+            <div className='vert-navbar'>
+              <BattsizeNavbarItem isChosen={location.pathname === "/batterysize/"}/>
+              <BatttimeNavbarItem isChosen={location.pathname === "/batterytime/"}/>
+            </div>
+            <div className='page'>
+              <Routes>
+                
+                  <Route path='/batterysize/' Component={BatterySizeApp}/>
+                
+                <Route path='/batterytime/' Component={BatteryTimeApp}/>
+              </Routes>
+            </div>
           </div>
-          <div className='page'>
-            <Routes>
-              <Route path='/batterysize/' Component={BatterySizeApp}/>
-              <Route path='/batterytime/' Component={BatteryTimeApp}/>
-            </Routes>
-          </div>
-        </div>
         </>
   )
 }

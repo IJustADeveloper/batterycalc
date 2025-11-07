@@ -1,32 +1,43 @@
 import { useState, useEffect } from 'react'
 import AdditionalInfoCard from '../modules/AdditionalInfoCard.jsx'
 import Api from '../Api.jsx'
-import Sorts from '../Sorts.jsx'
+import {defaultSort, priceSort} from '../utils/Sorts.js'
 
 import BatteryChoiceForm from '../components/BatteryChoiceForm.jsx'
 import Form from '../components/Form.jsx'
 import Results from '../modules/Results.jsx'
 
+import { getBatteryData, getCurrencies } from '../store/battTimeApp/battTimeGetData.js'
+import { clearChecked, updateSelectedBatteryId } from '../store/battTimeApp/battTimeActionCreators.js'
+import { useSelector, useDispatch} from 'react-redux'
+
+import BattTimeResultsTable from '../modules/BattTimeResultsTable.jsx'
+import BattTimeAddInfoCard from '../modules/BattTimeAddInfoCard.jsx'
+
 
 function BatteryTimeApp(){
     let api = new Api;
 
-    const [data, setData] = useState(null);
+    const dispatch = useDispatch()
 
-    const [selectedBatteryId, setSelectedBatteryId] = useState(null);
+    const currenciesStatus = useSelector(state => state.battSize.currenciesStatus)
 
-    const [currencies, setCurrencies] = useState(null);
-    const [selectedCurrency, setSelectedCurrency] = useState(null);
-    const [currenciesLoaded, setCurrenciesLoaded] = useState(false);
+    //const [data, setData] = useState(null);
 
-    const [checked, setChecked] = useState({});
+    //const [selectedBatteryId, setSelectedBatteryId] = useState(null);
+
+    //const [currencies, setCurrencies] = useState(null);
+    //const [selectedCurrency, setSelectedCurrency] = useState(null);
+    //const [currenciesLoaded, setCurrenciesLoaded] = useState(false);
+
+    //const [checked, setChecked] = useState({});
 
     const [names, setNames] = useState(null);
     const [namesLoaded, setNamesLoaded] = useState(false);
 
     const [pickedNames, setPickedNames] = useState({});
 
-    const [calcPower, setCalcPower] = useState(null);
+    //const [calcPower, setCalcPower] = useState(null);
 
     const formFieldsParams = [
         {id: 'powerS', label: 'S of load', units: 'kVA', inputParams: {className:'number-input', type:'number', step:'any', name:'powerS'}},
@@ -81,21 +92,24 @@ function BatteryTimeApp(){
         let preCalcFields = [...calculatedFieldsParams];
         preCalcFields[0].value = formData.power_el;
         setCalculatedFieldsParams(preCalcFields);
-        setCalcPower(formData.power_el);
 
-        setChecked({});
+        //setCalcPower(formData.power_el);
 
-        await api.systemRuntimeEstimate(formData).then(result => { if (result === undefined){result = null}; setData(result);})
+        //setChecked({});
+
+        //await api.systemRuntimeEstimate(formData).then(result => { if (result === undefined){result = null}; setData(result);})
+
+        dispatch(getBatteryData(formData))
+        dispatch(clearChecked())
+        dispatch(updateSelectedBatteryId(null))
     }
 
 
-    useEffect(()=>{api.getCurrencies().then(result => {setCurrencies(result.currencies); setSelectedCurrency(result.currencies[Object.keys(result.currencies)[0]]); setCurrenciesLoaded(true)})}, [])
+    useEffect(()=>{dispatch(getCurrencies())}, [])
     useEffect(()=>{api.getNames().then(result => {setNames(result.data); setNamesLoaded(true);})}, []);
 
     
-    if (currenciesLoaded && namesLoaded){
-        const columnNames = ['Brand', 'Model', 't BOL', 't EOL', 'Q / string', 'Strings', 'Total', 'Sum '+selectedCurrency.currency];
-        const columnSorts = [Sorts.defaultSort, Sorts.defaultSort, Sorts.defaultSort, Sorts.defaultSort, Sorts.defaultSort, Sorts.defaultSort, Sorts.defaultSort, Sorts.priceSort]
+    if (currenciesStatus === 'success' && namesLoaded){
         return (
             <>  
             <div className='batttime-page-header'><p>Battery Time</p><img src='assets/battery-time-icon.svg' alt='' width='34px' height='32px' /></div>
@@ -104,8 +118,11 @@ function BatteryTimeApp(){
                     <BatteryChoiceForm names={names} pickedNames={pickedNames} setPickedNames={setPickedNames} />
                     <Form formFieldsParams={formFieldsParams} calculatedFieldsParams={calculatedFieldsParams} handleSubmit={handleSubmit} handleChange={handleChangeForm} headerNum={2} headerColor='yellow'/>
                 </div>
-                <Results data={data} columnNames={columnNames} columnSorts={columnSorts} selectedBatteryId={selectedBatteryId} setSelectedBatteryId={setSelectedBatteryId} checked={checked} setChecked={setChecked} selectedCurrency={selectedCurrency} currencies={currencies} headerNum={3} headerColor='cyan' dotOrAsymptotes={[calcPower, null]}/>
-                <AdditionalInfoCard data={data} selectedBatteryId={selectedBatteryId} setSelectedCurrency={setSelectedCurrency} selectedCurrency={selectedCurrency} currencies={currencies} headerColor='cyan'/>
+                <Results headerNum={3} headerColor='cyan'>
+                    <BattTimeResultsTable/>
+                    <h1>GRAPH</h1>
+                </Results>
+                <BattTimeAddInfoCard/>
             </div>
             </>
         )

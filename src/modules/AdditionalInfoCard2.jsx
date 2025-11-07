@@ -1,77 +1,31 @@
 import { formatPrice } from "../utils/format"
 
-function AdditionalInfoCard({data, selectedBatteryId, setSelectedCurrency, currencies=null, selectedCurrency=null, headerColor='maroon'}){
+function AdditionalInfoCard({additionalData, dischargeData, selectedBatteryId, setSelectedCurrency, currencies=null, selectedCurrency=null, headerColor='maroon'}){
 
-    let total_batt_num = null
-    if (data !== null){
-        let battery = data.data[selectedBatteryId]
-        if (battery !== undefined)
-        {
-            total_batt_num = data.data[selectedBatteryId].num_batteries_total
-        }
+    const minOrNotNull = function(a, b){
+        if (a === null) return b 
+        if (b === null)return a
+        return Math.min(a, b)
     }
 
-    let price = null
-    if (data !== null && selectedCurrency !== null){
-        let battery = data.data[selectedBatteryId]
-        if (battery !== undefined){
-            if (battery.price.price_min !== null){
-                price = Math.ceil(battery.price.price_min * currencies[battery.price.currency].equivalent / currencies[battery.price.currency].currency_amount * currencies[selectedCurrency.currency].currency_amount / currencies[selectedCurrency.currency].equivalent)
-                price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-            }else{
-                price = battery.price.alt_price
-            }
-        }
-    }
+    const batteryAddtionalData = additionalData?.[selectedBatteryId] ?? null
+    const batteryDischargeData = dischargeData?.[selectedBatteryId] ?? null
 
-    let currency_options = []
-    if(currencies !== null){
-        for (let key in currencies) {
-            currency_options.push(<option value={currencies[key].currency} key={currencies[key].currency}>{currencies[key].currency}</option>)
-        }
-    }
+    const totalBatteriesNumber = batteryDischargeData?.num_batteries_total ?? null
 
-    let batt = null
-    if (data !== null){
-        let adinfo = data.adinfo
-        batt = adinfo[selectedBatteryId]
-    }
+    const mass = totalBatteriesNumber && batteryAddtionalData?.weight ? (batteryAddtionalData.weight * totalBatteriesNumber).toFixed(1) :  '-'
+    const volume = totalBatteriesNumber && batteryAddtionalData?.length && batteryAddtionalData?.width && (batteryAddtionalData?.height || batteryAddtionalData?.max_height) ? (batteryAddtionalData.width * batteryAddtionalData.length * minOrNotNull(batteryAddtionalData.height, batteryAddtionalData.max_height) * totalBatteriesNumber / 1000000000).toFixed(3) :  '-'
+    const price = batteryDischargeData?.price ? formatPrice(batteryDischargeData.price, currencies, selectedCurrency) : '-'
+    
+    const currencyOptions = Object.values(currencies ?? {}).map((c)=> <option value={c.currency} key={c.currency}>{c.currency}</option>)
 
-    if (batt === undefined){
-        batt = null
-    }
-
-    const f = function(a, b){
-        if (a === null){
-            return b
-        }else if (b === null){
-            return a
-        }else{
-            return Math.min(a, b)
-        }
-    }
-
-    let isButtonDisabled = true
-    if (batt !== null && batt.docs_link !== null){
-        isButtonDisabled = false;
-    }
-
-    let capacity_name = null;
-    let capacity_value = null;
-    if (batt !== null){
-        if (batt.capacity_C10 !== null){
-            capacity_name = 'Capacity C10, Ah'
-            capacity_value = batt.capacity_C10
-        }
-        else if (batt.capacity_C20 !== null){
-            capacity_name = 'Capacity C20, Ah'
-            capacity_value = batt.capacity_C20
-        }
-        else if(batt.capacity_other !== null){
-            capacity_name = `Capacity ${batt.capacity_other_time}min, ${batt.capacity_other_measure}`
-            capacity_value = batt.capacity_other
-        }
-    }
+    const capacityValue = batteryAddtionalData?.capacity_C10 ?? batteryAddtionalData?.capacity_C20 ?? batteryAddtionalData?.capacity_other ?? '-'
+    const capacityName = (
+        batteryAddtionalData?.capacity_C10 || batteryAddtionalData?.capacity_C10 === 0 ? 'Capacity C10, Ah' :
+        batteryAddtionalData?.capacity_C20 || batteryAddtionalData?.capacity_C20 === 0 ? 'Capacity C20, Ah' :
+        batteryAddtionalData?.capacity_other || batteryAddtionalData?.capacity_other === 0 ? `Capacity ${batteryAddtionalData.capacity_other_time}min, ${batteryAddtionalData.capacity_other_measure}` :
+        'Capacity'
+    )
 
     return(
         <>
@@ -83,11 +37,11 @@ function AdditionalInfoCard({data, selectedBatteryId, setSelectedCurrency, curre
                     </div>
                     <div className='adinfo-card-details-container'>
                         <div className='adinfo-card-details-names'>
-                            <img src={batt !== null && batt.image_link !== null ? batt.image_link :  'assets/Nonbranded_battery-picture_300.png'} alt='no image' width='84px' height='84px'/>
+                            <img src={batteryAddtionalData?.image_link ??  'assets/Nonbranded_battery-picture_300.png'} alt='no image' width='84px' height='84px'/>
                             <div>
-                                <p>{batt !== null && batt.model !== null ? batt.model :  'Pick a line'}</p>
-                                <p>{batt !== null && batt.vendor !== null ? batt.vendor :  ''}</p>
-                                <p>{batt !== null && batt.series !== null ? batt.series :  ''}</p>
+                                <p>{batteryAddtionalData?.model ??  'Pick a line'}</p>
+                                <p>{batteryAddtionalData?.vendor ??  ''}</p>
+                                <p>{batteryAddtionalData?.series ??  ''}</p>
                             </div>
                         </div>
 
@@ -97,23 +51,23 @@ function AdditionalInfoCard({data, selectedBatteryId, setSelectedCurrency, curre
                                 <tbody>
                                     <tr>
                                         <td>Technology</td>
-                                        <td>{batt !== null && batt.technology !== null ? batt.technology :  '-'}</td>
+                                        <td>{batteryAddtionalData?.technology ?? '-'}</td>
                                     </tr>
                                     <tr>
                                         <td>Voltage, V</td>
-                                        <td>{batt !== null && batt.voltage !== null ? batt.voltage :  '-'}</td>
+                                        <td>{batteryAddtionalData?.voltage ??  '-'}</td>
                                     </tr>
                                     <tr>
-                                        <td>{capacity_name !== null ? capacity_name : 'Capacity'}</td>
-                                        <td>{capacity_value !== null ? capacity_value :  '-'}</td>
+                                        <td>{capacityName}</td>
+                                        <td>{capacityValue}</td>
                                     </tr>
                                     <tr>
                                         <td>Lifespan, years</td>
-                                        <td>{batt !== null && batt.lifespan !== null ? batt.lifespan :  '-'}</td>
+                                        <td>{batteryAddtionalData?.lifespan ??  '-'}</td>
                                     </tr>
                                     <tr>
                                         <td>Terminal Type</td>
-                                        <td>{batt !== null && batt.terminal_type !== null ? batt.terminal_type :  '-'}</td>
+                                        <td>{batteryAddtionalData?.terminal_type ??  '-'}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -125,30 +79,30 @@ function AdditionalInfoCard({data, selectedBatteryId, setSelectedCurrency, curre
                                 <tbody>
                                     <tr>
                                         <td>Length, mm</td>
-                                        <td>{batt !== null && batt.length !== null ? batt.length :  '-'}</td>
+                                        <td>{batteryAddtionalData?.length ??  '-'}</td>
                                     </tr>
                                     <tr>
                                         <td>Width, mm</td>
-                                        <td>{batt !== null && batt.width !== null ? batt.width :  '-'}</td>
+                                        <td>{batteryAddtionalData?.width ??  '-'}</td>
                                     </tr>
                                     <tr>
                                         <td>Height, mm</td>
-                                        <td>{batt !== null && batt.height !== null ? batt.height :  '-'}</td>
+                                        <td>{batteryAddtionalData?.height ??  '-'}</td>
                                     </tr>
                                     <tr>
                                         <td>Max height, mm</td>
-                                        <td>{batt !== null && batt.max_height !== null ? batt.max_height :  '-'}</td>
+                                        <td>{batteryAddtionalData?.max_height ??  '-'}</td>
                                     </tr>
                                     <tr>
                                         <td>Weight, kg</td>
-                                        <td>{batt !== null && batt.weight !== null ? batt.weight :  '-'}</td>
+                                        <td>{batteryAddtionalData?.weight ?? '-'}</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
                         <div className='button-container'>
-                            <button className='datasheet-link-button' disabled={isButtonDisabled} onClick={() => {if (batt !== null && batt.docs_link !== null){window.open(batt.docs_link, '_blank')}}}>
+                            <button className='datasheet-link-button' disabled={batteryAddtionalData?.docs_link ? true : false} onClick={() => {if (batteryAddtionalData?.docs_link){window.open(batteryAddtionalData.docs_link, '_blank')}}}>
                                 <div>Datasheet</div> 
                                 <img src='assets/datasheet-link-button.svg' alt='' width='18px' height='18px'/>
                             </button>
@@ -166,20 +120,20 @@ function AdditionalInfoCard({data, selectedBatteryId, setSelectedCurrency, curre
                             <tbody>
                                 <tr>
                                     <td><img src='assets/mass-icon.svg' alt='' width='26px' height='26px'/></td>
-                                    <td>{total_batt_num !== null && batt !== null && batt.weight !== null ? (batt.weight * total_batt_num).toFixed(1) :  '-'}</td>
+                                    <td>{mass}</td>
                                     <td>kg</td>
                                 </tr>
                                 <tr>
                                     <td><img src='assets/volume-icon.svg' alt='' width='26px' height='26px'/></td>
-                                    <td>{total_batt_num !== null && batt !== null && batt.length !== null && batt.width !== null && (batt.height !== null || batt.max_height !== null) ? (batt.width * batt.length * f(batt.height, batt.max_height) * total_batt_num / 1000000000).toFixed(3) :  '-'}</td>
+                                    <td>{volume}</td>
                                     <td>m3</td>
                                 </tr>
                                 <tr>
                                     <td><img src='assets/cost-icon.svg' alt='' width='26px' height='26px'/></td>
-                                    <td>{price !== null  ? price :  '-'}</td>
+                                    <td>{price}</td>
                                     <td>
-                                        <select value={selectedCurrency.currency} onChange={(e) => setSelectedCurrency(currencies[e.target.value])} className='adinfo-card-summary-curreny-select'>
-                                            {currency_options}
+                                        <select value={selectedCurrency.currency} onChange={(e) => setSelectedCurrency(e.target.value)} className='adinfo-card-summary-curreny-select'>
+                                            {currencyOptions}
                                         </select>
                                     </td>
                                 </tr>
