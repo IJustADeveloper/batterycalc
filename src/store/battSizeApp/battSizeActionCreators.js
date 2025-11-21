@@ -39,3 +39,7 @@ export const updateCurrenciesStatus = (currencyStatus) => {
 export const updateSelectedCurrency = (selectedCurrency) => {
     return {type: actionNames.BATT_SIZE_SELECTED_CURRENCY_UPDATE, payload: selectedCurrency}
 }
+
+export const updateFormValues = (formValues) => {
+    return {type: actionNames.BATT_SIZE_LAST_FORM_VALUES_UPDATE, payload: formValues}
+}

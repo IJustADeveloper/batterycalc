@@ -1,10 +1,10 @@
 import { useSelector, useDispatch } from "react-redux"
-import { updateSelectedBatteryId, updateChecked } from "../store/battTimeApp/battTimeActionCreators";
+import { updateSelectedBatteryId, updateChecked } from "../../store/battTimeApp/battTimeActionCreators";
 
-import { defaultSort, priceSort } from "../utils/Sorts";
-import { formatNumbers, formatMargin, formatTimeFromMinutes, formatPrice } from "../utils/format";
+import { defaultSort, priceSort } from "../../utils/Sorts";
+import { formatNumbers, formatMargin, formatTimeFromMinutes, formatPrice } from "../../utils/format";
 
-import Table from "./Table";
+import Table from "../Table";
 
 const BattTimeResultsTable = () => {
     const dispatch = useDispatch()

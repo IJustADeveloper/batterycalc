@@ -13,6 +13,13 @@ const initialState = {
     currencies: null,
     currenciesStatus: null,
     selectedCurrency: null,
+
+    batteryNames: null,
+    batteryNamesStatus: null,
+
+    pickedBatteryNames: {},
+
+    formValues: null,
 }
 
 
@@ -92,6 +99,80 @@ export default function battTimeReducer(state = initialState, action){
             return {
                 ...state,
                 selectedCurrency: action.payload
+            }
+        }
+        case actionNames.BATT_TIME_NAMES_LOAD:{
+            return {
+                ...state,
+                batteryNames: action.payload
+            }
+        }
+        case actionNames.BATT_TIME_NAMES_STATUS_UPDATE:{
+            return {
+                ...state,
+                batteryNamesStatus: action.payload
+            }
+        }
+        case actionNames.BATT_TIME_PICKED_NAMES_UPDATE:{
+            console.log(action)
+            switch(action.payload.answerType){
+                case 'vendor':{
+                    console.log(1)
+                    const vendor = action.payload.pickedName
+
+                    if (state.pickedBatteryNames[vendor]){
+                        let copyPickedBatteryNames = structuredClone(state.pickedBatteryNames)
+                        delete copyPickedBatteryNames[vendor]
+                        return {...state, pickedBatteryNames: copyPickedBatteryNames}
+                    }
+
+                    return {...state, pickedBatteryNames: {...state.pickedBatteryNames, [vendor]: {}}}
+                }
+                case 'series':{
+                    console.log(2)
+                    const vendor = action.payload.header
+                    const series = action.payload.pickedName
+
+                    if (state.pickedBatteryNames[vendor][series]){
+                        let copyPickedBatteryNames = structuredClone(state.pickedBatteryNames)
+                        delete copyPickedBatteryNames[vendor][series]
+                        return {...state, pickedBatteryNames: copyPickedBatteryNames}
+                    }
+
+                    return {
+                        ...state, 
+                        pickedBatteryNames: {
+                            ...state.pickedBatteryNames, [vendor]: {...state.pickedBatteryNames[vendor], [series]: {}}
+                        }
+                    }
+                }
+                case 'model':{
+                    console.log(3)
+                    const [vendor, series]  = action.payload.header.split('/')
+                    const model = action.payload.pickedName
+
+                    if (state.pickedBatteryNames[vendor][series][model]){
+                        let copyPickedBatteryNames = structuredClone(state.pickedBatteryNames)
+                        delete copyPickedBatteryNames[vendor][series][model]
+                        return {...state, pickedBatteryNames: copyPickedBatteryNames}
+                    }
+
+                    return {
+                        ...state, 
+                        pickedBatteryNames: {
+                            ...state.pickedBatteryNames, [vendor]: {
+                                ...state.pickedBatteryNames[vendor], 
+                                [series]: {...state.pickedBatteryName[vendor][series], [model]: True}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        case actionNames.BATT_TIME_LAST_FORM_VALUES_UPDATE:{
+            return {
+                ...state,
+                formValues: action.payload
             }
         }
         default:{

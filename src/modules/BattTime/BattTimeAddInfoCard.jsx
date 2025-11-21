@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux"
 
-import AdditionalInfoCard from "./AdditionalInfoCard2";
-import { updateSelectedCurrency } from "../store/battTimeApp/battTimeActionCreators";
+import AdditionalInfoCard from "../AdditionalInfoCard";
+import { updateSelectedCurrency } from "../../store/battTimeApp/battTimeActionCreators";
 
 
 const BattTimeAddInfoCard = () => {

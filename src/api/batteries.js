@@ -31,3 +31,13 @@ export const fetchBattTimeBatteryData = async (params) => {
         console.log("error: ", error)
     }
 }
+
+export const fetchBatteryNames = async () => {
+    try {
+        const { data } = await instance.get(`/get_names`)
+        return data
+    }
+    catch (error){
+        console.log("error: ", error)
+    }
+}

@@ -39,3 +39,19 @@ export const updateCurrenciesStatus = (currencyStatus) => {
 export const updateSelectedCurrency = (selectedCurrency) => {
     return {type: actionNames.BATT_TIME_SELECTED_CURRENCY_UPDATE, payload: selectedCurrency}
 }
+
+export const loadBatteryNames = (names) => {
+    return {type: actionNames.BATT_TIME_NAMES_LOAD, payload: names}
+}
+
+export const updateBatteryNamesStatus = (namesStatus) => {
+    return {type: actionNames.BATT_TIME_NAMES_STATUS_UPDATE, payload: namesStatus}
+}
+
+export const updatePickedBatteryNames = (answerType, header, pickedName) => {
+    return {type: actionNames.BATT_TIME_PICKED_NAMES_UPDATE, payload: {answerType: answerType, header: header, pickedName: pickedName}}
+}
+
+export const updateFormValues = (formValues) => {
+    return {type: actionNames.BATT_TIME_LAST_FORM_VALUES_UPDATE, payload: formValues}
+}

@@ -1,10 +1,10 @@
 import { useSelector, useDispatch } from "react-redux"
-import { updateSelectedBatteryId, updateChecked } from "../store/battSizeApp/battSizeActionCreators";
+import { updateSelectedBatteryId, updateChecked } from "../../store/battSizeApp/battSizeActionCreators";
 
-import { defaultSort, priceSort } from "../utils/Sorts";
-import { formatNumbers, formatMargin, formatTimeFromMinutes, formatPrice } from "../utils/format";
+import { defaultSort, priceSort } from "../../utils/Sorts";
+import { formatNumbers, formatMargin, formatTimeFromMinutes, formatPrice } from "../../utils/format";
 
-import Table from "./Table";
+import Table from "../Table";
 
 const BattSizeResultsTable = () => {
     const dispatch = useDispatch()

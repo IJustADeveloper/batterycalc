@@ -10,3 +10,10 @@ export const BATT_TIME_CHECKED_CLEAR = 'battTime/checked/clear'
 export const BATT_TIME_CURRENCIES_LOAD = 'battTime/currencies/load'
 export const BATT_TIME_CURRENCIES_STATUS_UPDATE = 'battTime/currenciesStatus/update'
 export const BATT_TIME_SELECTED_CURRENCY_UPDATE = 'battTime/selectedCurrency/update'
+
+export const BATT_TIME_NAMES_LOAD = 'battTime/names/load'
+export const BATT_TIME_NAMES_STATUS_UPDATE = 'battTime/namesStatus/update'
+
+export const BATT_TIME_PICKED_NAMES_UPDATE = 'battTime/pickedNames/update'
+
+export const BATT_TIME_LAST_FORM_VALUES_UPDATE = 'battTime/formValues/update'

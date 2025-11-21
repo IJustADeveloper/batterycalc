@@ -13,6 +13,8 @@ const initialState = {
     currencies: null,
     currenciesStatus: null,
     selectedCurrency: null,
+
+    formValues: null,
 }
 
 
@@ -92,6 +94,12 @@ export default function battSizeReducer(state = initialState, action){
             return {
                 ...state,
                 selectedCurrency: action.payload
+            }
+        }
+        case actionNames.BATT_SIZE_LAST_FORM_VALUES_UPDATE:{
+            return{
+                ...state,
+                formValues: action.payload
             }
         }
         default:{

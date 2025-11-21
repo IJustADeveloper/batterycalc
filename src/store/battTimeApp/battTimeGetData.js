@@ -1,6 +1,6 @@
-import { fetchBattTimeBatteryData } from "../../api/batteries"
+import { fetchBattTimeBatteryData, fetchBatteryNames } from "../../api/batteries"
 import { fetchCurrencies } from "../../api/currencies"
-import { loadDischargeData, loadGraphingData, updateBatteryDataStatus, loadCurrencies, updateSelectedCurrency, updateCurrenciesStatus, loadAdditionalData } from "./battTimeActionCreators"
+import { loadDischargeData, loadGraphingData, updateBatteryDataStatus, loadCurrencies, updateSelectedCurrency, updateCurrenciesStatus, loadAdditionalData, loadBatteryNames, updateBatteryNamesStatus } from "./battTimeActionCreators"
 
 export const getBatteryData = (params) => async (dispatch) => {
     try {
@@ -30,5 +30,19 @@ export const getCurrencies = () => async (dispatch) => {
     }
     finally{
         dispatch(updateCurrenciesStatus("success"))
+    }
+}
+
+export const getBatteryNames = () => async (dispatch) => {
+    try {
+        dispatch(updateBatteryNamesStatus("loading"))
+        const { data } = await fetchBatteryNames()
+        dispatch(loadBatteryNames(data))
+    }
+    catch (error) {
+        dispatch(updateBatteryNamesStatus(error))
+    }
+    finally{
+        dispatch(updateBatteryNamesStatus("success"))
     }
 }

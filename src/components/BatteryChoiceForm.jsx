@@ -9,46 +9,11 @@ function BatteryChoiceForm({names, pickedNames, setPickedNames, headerNum=1, hea
   function handleChangeNames(event){
     let formInput = event.target
 
-
     if (formInput.type !== 'checkbox'){
       return;
     }
-
-    if (formInput.checked){
-      switch (formInput.dataset.answertype){
-        case 'vendor':
-          setPickedNames({...pickedNames, [formInput.value]: {}})
-          break;
-        case 'series':
-          setPickedNames({...pickedNames, [formInput.dataset.header]:{...pickedNames[formInput.dataset.header], [formInput.value]: {}}})
-          break;
-        case 'model':
-          const [vendorName, seriesName] = formInput.dataset.header.split('/')
-          setPickedNames({...pickedNames, [vendorName]:{...pickedNames[vendorName], [seriesName]: {...pickedNames[vendorName][seriesName], [formInput.value]: 0}}}) 
-          break;
-      }
-    }
-    else{
-      let copyPickedNames
-      switch (formInput.dataset.answertype){
-        case 'vendor':
-          copyPickedNames = JSON.parse(JSON.stringify(pickedNames));
-          delete copyPickedNames[formInput.value]
-          setPickedNames(copyPickedNames)
-          break;
-        case 'series':
-          copyPickedNames = JSON.parse(JSON.stringify(pickedNames));
-          delete copyPickedNames[formInput.dataset.header][formInput.value]
-          setPickedNames(copyPickedNames) 
-          break;
-        case 'model':
-          copyPickedNames = JSON.parse(JSON.stringify(pickedNames));
-          const [vendorName, seriesName] = formInput.dataset.header.split('/')
-          delete copyPickedNames[vendorName][seriesName][formInput.value]
-          setPickedNames(copyPickedNames)
-          break;
-      }
-    }
+    
+    setPickedNames(formInput.dataset.answertype, formInput.dataset.header, formInput.value)
   }
 
   useEffect(()=>{
