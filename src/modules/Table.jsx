@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { checkedSort, getNextSortDirection } from '../utils/Sorts';
 
-function Table({data, columnNames, columnClasses, columnSorts, selectedBatteryId, setSelectedBatteryId, checked, setChecked, format, color='maroon', checkboxColors=null}){
+function Table({data, columnNames, columnClasses, columnSorts, selectedBatteryId, setSelectedBatteryId, checked, setChecked, preSortFormat=(ents)=>ents, format=(ents)=>ents, color='maroon', checkboxColors=null}){
 
     const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
     const [checkboxSortConfig, setCheckboxSortConfig] = useState({direction: null});
@@ -54,6 +54,8 @@ function Table({data, columnNames, columnClasses, columnSorts, selectedBatteryId
     let rows = []
     if (data !== null){
         let ents = Object.entries(data);
+
+        ents = preSortFormat(ents)
 
         ents = sortByColumn(structuredClone(ents));
         ents = checkedSort(structuredClone(ents), checkboxSortConfig.direction, checked);

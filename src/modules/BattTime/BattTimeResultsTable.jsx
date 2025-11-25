@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { updateSelectedBatteryId, updateChecked } from "../../store/battTimeApp/battTimeActionCreators";
 
 import { defaultSort, priceSort } from "../../utils/Sorts";
-import { formatNumbers, formatMargin, formatTimeFromMinutes, formatPrice } from "../../utils/format";
+import { formatNumbers, formatTimeFromMinutes, formatPrice, formatBatteryPrice } from "../../utils/format";
 
 import Table from "../Table";
 
@@ -17,6 +17,16 @@ const BattTimeResultsTable = () => {
     const setSelectedBatteryId = (batteryId) => {dispatch(updateSelectedBatteryId(batteryId))}
     const setChecked = (batteryId) => {dispatch(updateChecked(batteryId))}
 
+    const preSortFormat = (entries) => {
+        entries = structuredClone(entries)
+        entries = entries.map(([b_id, row]) => {
+            row.price = formatBatteryPrice(row.price, currencies, selectedCurrency)
+            row.price.currency = selectedCurrency
+            return [b_id, row]
+        })
+        return entries
+    }
+
     const format = (entries) => {
         entries = structuredClone(entries)
         entries = entries.map(([b_id, row]) => {
@@ -28,7 +38,7 @@ const BattTimeResultsTable = () => {
             
             row.discharge_time_start_life = formatTimeFromMinutes(row.discharge_time_start_life)
             row.discharge_time_end_life = formatTimeFromMinutes(row.discharge_time_end_life)
-            row.price = formatPrice(row.price, currencies, selectedCurrency)
+            row.price = row.price.price_min ? formatPrice(row.price.price_min) : row.price.alt_price
 
             return [b_id, row]
         })
@@ -46,6 +56,7 @@ const BattTimeResultsTable = () => {
             setSelectedBatteryId={setSelectedBatteryId} 
             checked={checked} 
             setChecked={setChecked} 
+            preSortFormat={preSortFormat}
             format={format} 
             color={"maroon"}
         />

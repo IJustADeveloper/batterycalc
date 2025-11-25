@@ -1,4 +1,4 @@
-import { formatPrice } from "../utils/format"
+import { formatBatteryPrice } from "../utils/format"
 
 function AdditionalInfoCard({additionalData, dischargeData, selectedBatteryId, setSelectedCurrency, currencies=null, selectedCurrency=null, headerColor='maroon'}){
 
@@ -15,7 +15,7 @@ function AdditionalInfoCard({additionalData, dischargeData, selectedBatteryId, s
 
     const mass = totalBatteriesNumber && batteryAddtionalData?.weight ? (batteryAddtionalData.weight * totalBatteriesNumber).toFixed(1) :  '-'
     const volume = totalBatteriesNumber && batteryAddtionalData?.length && batteryAddtionalData?.width && (batteryAddtionalData?.height || batteryAddtionalData?.max_height) ? (batteryAddtionalData.width * batteryAddtionalData.length * minOrNotNull(batteryAddtionalData.height, batteryAddtionalData.max_height) * totalBatteriesNumber / 1000000000).toFixed(3) :  '-'
-    const price = batteryDischargeData?.price ? formatPrice(batteryDischargeData.price, currencies, selectedCurrency) : '-'
+    const price = batteryDischargeData?.price ? formatBatteryPrice(batteryDischargeData.price, currencies, selectedCurrency) : '-'
     
     const currencyOptions = Object.values(currencies ?? {}).map((c)=> <option value={c.currency} key={c.currency}>{c.currency}</option>)
 

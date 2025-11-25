@@ -22,9 +22,11 @@ export const formatTimeFromMinutes = (value) => {
     }
 }
 
-export const formatPrice = (value, currencies, selectedCurrency) => {
-    if (value.price_min !== null){
-        return currencyConverter(value.price_min, currencies, value.currency, selectedCurrency).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+export const formatPrice = (price) => price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+
+export const formatBatteryPrice = (value, currencies, selectedCurrency) => {
+    if (value.price_min !== null && value.currency !== null){
+        value.price_min = currencyConverter(value.price_min, currencies, value.currency, selectedCurrency)
     }
-    else return value.alt_price
+    return value
 }

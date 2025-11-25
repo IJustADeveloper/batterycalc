@@ -83,6 +83,7 @@ function checkedSort(ents, direction, checked){
         if (direction === 'descending') {
             return valB ? 1 : -1;
         }
+        else return 0
     })
 
     return ents

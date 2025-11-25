@@ -114,10 +114,8 @@ export default function battTimeReducer(state = initialState, action){
             }
         }
         case actionNames.BATT_TIME_PICKED_NAMES_UPDATE:{
-            console.log(action)
             switch(action.payload.answerType){
                 case 'vendor':{
-                    console.log(1)
                     const vendor = action.payload.pickedName
 
                     if (state.pickedBatteryNames[vendor]){
@@ -129,7 +127,6 @@ export default function battTimeReducer(state = initialState, action){
                     return {...state, pickedBatteryNames: {...state.pickedBatteryNames, [vendor]: {}}}
                 }
                 case 'series':{
-                    console.log(2)
                     const vendor = action.payload.header
                     const series = action.payload.pickedName
 
@@ -147,7 +144,6 @@ export default function battTimeReducer(state = initialState, action){
                     }
                 }
                 case 'model':{
-                    console.log(3)
                     const [vendor, series]  = action.payload.header.split('/')
                     const model = action.payload.pickedName
 
