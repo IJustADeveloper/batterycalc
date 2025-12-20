@@ -25,6 +25,7 @@ export const formatTimeFromMinutes = (value) => {
 export const formatPrice = (price) => price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
 
 export const formatBatteryPrice = (value, currencies, selectedCurrency) => {
+    value = structuredClone(value)
     if (value.price_min !== null && value.currency !== null){
         value.price_min = currencyConverter(value.price_min, currencies, value.currency, selectedCurrency)
     }
