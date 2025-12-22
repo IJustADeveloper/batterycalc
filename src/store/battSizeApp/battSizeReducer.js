@@ -9,9 +9,7 @@ const initialState = {
 
     selectedBatteryId: null,
     checked: new Set(),
-    
-    currencies: null,
-    currenciesStatus: null,
+
     selectedCurrency: null,
 
     formValues: null,
@@ -76,18 +74,6 @@ export default function battSizeReducer(state = initialState, action){
             return {
                 ...state,
                 checked: new Set()
-            }
-        }
-        case actionNames.BATT_SIZE_CURRENCIES_LOAD:{
-            return {
-                ...state,
-                currencies: action.payload
-            }
-        }
-        case actionNames.BATT_SIZE_CURRENCIES_STATUS_UPDATE:{
-            return {
-                ...state,
-                currenciesStatus: action.payload
             }
         }
         case actionNames.BATT_SIZE_SELECTED_CURRENCY_UPDATE:{

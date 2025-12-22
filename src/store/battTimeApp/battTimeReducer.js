@@ -10,12 +10,7 @@ const initialState = {
     selectedBatteryId: null,
     checked: new Set(),
     
-    currencies: null,
-    currenciesStatus: null,
     selectedCurrency: null,
-
-    batteryNames: null,
-    batteryNamesStatus: null,
 
     pickedBatteryNames: {},
 
@@ -83,34 +78,10 @@ export default function battTimeReducer(state = initialState, action){
                 checked: new Set()
             }
         }
-        case actionNames.BATT_TIME_CURRENCIES_LOAD:{
-            return {
-                ...state,
-                currencies: action.payload
-            }
-        }
-        case actionNames.BATT_TIME_CURRENCIES_STATUS_UPDATE:{
-            return {
-                ...state,
-                currenciesStatus: action.payload
-            }
-        }
         case actionNames.BATT_TIME_SELECTED_CURRENCY_UPDATE:{
             return {
                 ...state,
                 selectedCurrency: action.payload
-            }
-        }
-        case actionNames.BATT_TIME_NAMES_LOAD:{
-            return {
-                ...state,
-                batteryNames: action.payload
-            }
-        }
-        case actionNames.BATT_TIME_NAMES_STATUS_UPDATE:{
-            return {
-                ...state,
-                batteryNamesStatus: action.payload
             }
         }
         case actionNames.BATT_TIME_PICKED_NAMES_UPDATE:{
@@ -158,7 +129,7 @@ export default function battTimeReducer(state = initialState, action){
                         pickedBatteryNames: {
                             ...state.pickedBatteryNames, [vendor]: {
                                 ...state.pickedBatteryNames[vendor], 
-                                [series]: {...state.pickedBatteryName[vendor][series], [model]: True}
+                                [series]: {...state.pickedBatteryNames[vendor][series], [model]: true}
                             }
                         }
                     }

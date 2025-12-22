@@ -7,7 +7,8 @@ import { updateSelectedCurrency } from "../../store/battTimeApp/battTimeActionCr
 const BattTimeAddInfoCard = () => {
     const dispatch = useDispatch()
 
-    const {dischargeData, additionalData, selectedBatteryId, currencies, selectedCurrency} = useSelector(state => state.battTime)
+    const { currencies } = useSelector(state => state.shared)
+    const { dischargeData, additionalData, selectedBatteryId, selectedCurrency } = useSelector(state => state.battTime)
 
     const setSelectedCurrency = (currency) => {dispatch(updateSelectedCurrency(currency))}
 

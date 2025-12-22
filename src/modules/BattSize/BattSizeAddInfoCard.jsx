@@ -7,7 +7,8 @@ import { updateSelectedCurrency } from "../../store/battSizeApp/battSizeActionCr
 const BattSizeAddInfoCard = () => {
     const dispatch = useDispatch()
 
-    const {dischargeData, additionalData, selectedBatteryId, currencies, selectedCurrency} = useSelector(state => state.battSize)
+    const { currencies } = useSelector(state => state.shared)
+    const { dischargeData, additionalData, selectedBatteryId, selectedCurrency } = useSelector(state => state.battSize)
 
     const setSelectedCurrency = (currency) => {dispatch(updateSelectedCurrency(currency))}
 

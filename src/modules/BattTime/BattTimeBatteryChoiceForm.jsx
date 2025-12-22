@@ -6,7 +6,8 @@ import { updatePickedBatteryNames } from "../../store/battTimeApp/battTimeAction
 
 const BattTimeBatteryChoiceForm = () => {
     const dispatch = useDispatch()
-    const {batteryNames, pickedBatteryNames} = useSelector( state => state.battTime)
+    const { batteryNames } = useSelector(state => state.shared)
+    const { pickedBatteryNames } = useSelector(state => state.battTime)
 
     const setPickedBatteryNames = (answerType, header, pickedName) => {
         dispatch(updatePickedBatteryNames(answerType, header, pickedName))

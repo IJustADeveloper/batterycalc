@@ -1,6 +1,4 @@
-import { useState } from 'react'
-
-function Form({ formFieldsParams, calculatedFieldsParams, handleSubmit, handleChange, isSubmitting, headerNum = 1, headerColor = 'cyan' }) {
+const Form = ({ formFieldsParams, calculatedFieldsParams, handleSubmit, handleChange, isSubmitting, headerNum = 1, headerColor = 'cyan' }) => {
 
 	async function preHandleSubmit(event) {
 		event.preventDefault();

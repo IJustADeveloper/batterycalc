@@ -1,54 +1,66 @@
-import {useState, useEffect} from 'react'
+import { useState, useEffect } from 'react'
 import MultipleChoiceWithHeaders from './MultipleChoiceWithHeaders.jsx';
 
-function BatteryChoiceForm({names, pickedNames, setPickedNames, headerNum=1, headerColor='maroon'}){
+function BatteryChoiceForm({ names, pickedNames, setPickedNames, headerNum = 1, headerColor = 'maroon' }) {
 
-  const [showingSeries, setShowingSeries] = useState({});
-  const [showingModels, setShowingModels] = useState({});
+    const [showingVendors, setShowingVendors] = useState({});
+    const [showingSeries, setShowingSeries] = useState({});
+    const [showingModels, setShowingModels] = useState({});
 
-  function handleChangeNames(event){
-    let formInput = event.target
-
-    if (formInput.type !== 'checkbox'){
-      return;
+    function handleChangeNames(event) {
+        let formInput = event.target
+        if (formInput.type === 'checkbox') {
+            setPickedNames(formInput.dataset.answertype, formInput.dataset.header, formInput.value)
+        }
     }
-    
-    setPickedNames(formInput.dataset.answertype, formInput.dataset.header, formInput.value)
-  }
 
-  useEffect(()=>{
-    let preShowingSeries = {}
-    let preShowingModels = {}
-    Object.keys(pickedNames).forEach(vendorName=>{
-      preShowingSeries[vendorName] = Object.keys(names[vendorName])
-      Object.keys(pickedNames[vendorName]).forEach(seriesName=>{
-        preShowingModels[`${vendorName}/${seriesName}`] = names[vendorName][seriesName]
-      })
-    })
-    setShowingSeries(preShowingSeries)
-    setShowingModels(preShowingModels)
-  }, [pickedNames])
+    useEffect(() => {
+        let preShowingVendors = {'Brands': {}}
+        Object.keys(names).forEach(vendorName => {
+            preShowingVendors['Brands'][vendorName] = vendorName in pickedNames
+        })
 
-  return (
-        (names === null ? (<></>) : ( 
+        let preShowingSeries = {}
+        let preShowingModels = {}
+        Object.keys(pickedNames).forEach(vendorName => {
+            preShowingSeries[vendorName] = {}
+            Object.keys(names[vendorName]).forEach(seriesName => {
+                preShowingSeries[vendorName][seriesName] = seriesName in pickedNames[vendorName]
+            })
+
+            Object.keys(pickedNames[vendorName]).forEach(seriesName =>{
+                preShowingModels[`${vendorName}/${seriesName}`] = {}
+                names[vendorName][seriesName].forEach(modelName => {
+                    preShowingModels[`${vendorName}/${seriesName}`][modelName] = modelName in pickedNames[vendorName][seriesName]
+                })
+            })
+        }) 
+
+        setShowingVendors(preShowingVendors)
+        setShowingSeries(preShowingSeries)
+        setShowingModels(preShowingModels)
+
+    }, [pickedNames])
+
+    return (
+        (names === null ? (<></>) : (
             <>
                 <form onChange={handleChangeNames}>
                     <div className='choose-batt-container'>
                         <div className='numbered-header'>
-                            <div className={'number-box '+headerColor}>{headerNum}</div>
+                            <div className={'number-box ' + headerColor}>{headerNum}</div>
                             <p>Choose batteries:</p>
                         </div>
                         <div className='flex'>
-                            <MultipleChoiceWithHeaders header='Brand' answertype={'vendor'} data={{'Brands': Object.keys(names)}}/>
-                            <MultipleChoiceWithHeaders header='Series' answertype={'series'} data={showingSeries}/>
-                            <MultipleChoiceWithHeaders header='Model' answertype={'model'} data={showingModels}/>
+                            <MultipleChoiceWithHeaders header='Brand' answertype={'vendor'} data={showingVendors} />
+                            <MultipleChoiceWithHeaders header='Series' answertype={'series'} data={showingSeries} />
+                            <MultipleChoiceWithHeaders header='Model' answertype={'model'} data={showingModels} />
                         </div>
                     </div>
                 </form>
             </>
         ))
-    
-  )
+    )
 }
 
 export default BatteryChoiceForm

@@ -10,7 +10,9 @@ import Table from "../Table";
 const BattSizeResultsTable = () => {
     const dispatch = useDispatch()
 
-    const { dischargeData, checked, selectedBatteryId, currencies, selectedCurrency } = useSelector(state => state.battSize)
+    const { currencies } = useSelector(state => state.shared)
+    const { dischargeData, checked, selectedBatteryId, selectedCurrency } = useSelector(state => state.battSize)
+    
     const columnNames = ['Brand', 'Model', 't BOL', 't EOL', 'Q / string', 'Strings', 'Total', 'Margin', 'Sum '+ currencies[selectedCurrency].currency]
     const columnClasses = {'vendor': 'td-left', 'series': 'td-left','model': 'td-left', 'battery_id': 'hide-td'}
 	const columnSorts = [defaultSort, defaultSort, defaultSort, defaultSort, defaultSort, defaultSort, defaultSort, defaultSort, priceSort]

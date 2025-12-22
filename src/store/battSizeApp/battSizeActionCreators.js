@@ -28,14 +28,6 @@ export const clearChecked = () => {
     return {type: actionNames.BATT_SIZE_CHECKED_CLEAR}
 }
 
-export const loadCurrencies = (currencies) => {
-    return {type: actionNames.BATT_SIZE_CURRENCIES_LOAD, payload: currencies}
-}
-
-export const updateCurrenciesStatus = (currencyStatus) => {
-    return {type: actionNames.BATT_SIZE_CURRENCIES_STATUS_UPDATE, payload: currencyStatus}
-}
-
 export const updateSelectedCurrency = (selectedCurrency) => {
     return {type: actionNames.BATT_SIZE_SELECTED_CURRENCY_UPDATE, payload: selectedCurrency}
 }
