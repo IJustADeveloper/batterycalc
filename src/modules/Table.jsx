@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { checkedSort, getNextSortDirection } from '../utils/Sorts';
 
-function Table({data, columnNames, columnClasses, columnSorts, selectedBatteryId, setSelectedBatteryId, checked, setChecked, preSortFormat=(ents)=>ents, format=(ents)=>ents, color='maroon', checkboxColors=null}){
+function Table({data, columnNames, columnClasses, columnSorts, selectedRowId, setSelectedRowId, checked, setChecked, preSortFormat=(ents)=>ents, format=(ents)=>ents, color='maroon', checkboxColors=null}){
 
     const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
     const [checkboxSortConfig, setCheckboxSortConfig] = useState({direction: null});
@@ -10,11 +10,8 @@ function Table({data, columnNames, columnClasses, columnSorts, selectedBatteryId
         let tr = e.target.parentElement
         
         if (tr.tagName === 'TR'){
-            let battery_id = tr.id
-
-            if (battery_id !== selectedBatteryId){
-                setSelectedBatteryId(battery_id)
-            }else(setSelectedBatteryId(null))
+            let row_id = tr.id
+            setSelectedRowId(row_id)
         }   
     }
 
@@ -62,23 +59,23 @@ function Table({data, columnNames, columnClasses, columnSorts, selectedBatteryId
 
         ents = format(ents);
 
-        rows = ents.map(([b_id, row], b_ind, b_a)=>{
+        rows = ents.map(([r_id, row])=>{ // r_id = row id
             let cells = Object.entries(row).map(([key, param], p_ind, a)=>{
                 let classname = ''
                 if (columnClasses[key] !== undefined) {classname = columnClasses[key]}
                 return(
-                    <td className={classname} name={key} key={b_id+":"+key}>{ param }</td>
+                    <td className={classname} name={key} key={r_id+":"+key}>{ param }</td>
                 )
             })
 
             cells.push(
-                <td name={'checkbox'} key={b_id+':checkbox'} style={{backgroundColor: checkboxColors !== null && checkboxColors[b_id] !== undefined ? checkboxColors[b_id] : null}}>
-                    <input onChange={() => {setChecked(b_id)}} checked={checked.has(b_id) ? true : false} type='checkbox'/>
+                <td name={'checkbox'} key={r_id+':checkbox'} style={{backgroundColor: checkboxColors !== null && checkboxColors[r_id] !== undefined ? checkboxColors[r_id] : null}}>
+                    <input onChange={() => {setChecked(r_id)}} checked={checked.has(r_id) ? true : false} type='checkbox'/>
                 </td>
             )
 
             return(
-                <tr className={b_id === selectedBatteryId ? 'highlight ' + color : ''} onClick={highlight} id={b_id} key={b_id}>{cells}</tr>
+                <tr className={r_id === selectedRowId ? 'highlight ' + color : ''} onClick={highlight} id={r_id} key={r_id }>{cells}</tr>
             )
         })
     }

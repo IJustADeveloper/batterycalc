@@ -16,15 +16,15 @@ function Results({children, headerColor='maroon', headerNum=2}){
                 </div>
                 <div className='results-content-container' 
                     style={{
-                        visibility: displayedComponentNum === 1 ? 'visible' : 'hidden',
+                        display: displayedComponentNum === 1 ? 'block' : 'none',
                         position: displayedComponentNum === 1 ? 'static' : 'absolute',
                     }}>
                     {children[0]}
                 </div>
                 <div className='results-content-container' 
                     style={{
-                        visibility: displayedComponentNum === 2 ? 'visible' : 'hidden',
-                        position: displayedComponentNum === 2 ? 'static' : 'absolute', overflowY: 'hidden',
+                        display: displayedComponentNum === 2 ? 'block' : 'none',
+                        position: displayedComponentNum === 2 ? 'static' : 'absolute', overflow: 'hidden',
                     }}>
                     {children[1]}
                 </div>
@@ -33,37 +33,5 @@ function Results({children, headerColor='maroon', headerNum=2}){
     )
 
 }
-
-/*
-<div className='results-content-container' style={displayedComponentNum === 1 ? {} : {overflowY: 'hidden'}}>
-                    { displayedComponentNum === 1 ? (
-                        <Table data={batteryData} columnNames={columnNames} columnSorts={columnSorts} 
-                        selectedBatteryId={selectedBatteryId} setSelectedBatteryId={setSelectedBatteryId} 
-                        outerChecked={checked} outerSetChecked={setChecked} 
-                        validationParams={[currencies, selectedCurrency]} validation={Validation} 
-                        color={headerColor}/>
-                    ) : null}
-                    { displayedComponentNum === 2 ? (
-                        <Graph data={batteryData} 
-                        selectedBatteryId={selectedBatteryId} setSelectedBatteryId={setSelectedBatteryId}
-                        checked={checked} setChecked={setChecked} 
-                        color={headerColor}/>
-                    ): null}
-                </div>
-*/
-
-/*<div className='results-content-container' style={{display: (displayedComponentNum === 1 ? 'block' : 'none')}}>
-                        <Table data={batteryData} columnNames={columnNames} columnSorts={columnSorts} 
-                        selectedBatteryId={selectedBatteryId} setSelectedBatteryId={setSelectedBatteryId} 
-                        outerChecked={checked} outerSetChecked={setChecked} 
-                        validationParams={[currencies, selectedCurrency]} validation={Validation} 
-                        color={headerColor}/>
-                    </div>
-                    <div className='results-content-container' style={{display: (displayedComponentNum === 2 ? 'block' : 'none'), overflowY: 'hidden'}}>
-                        <Graph data={batteryData} 
-                        selectedBatteryId={selectedBatteryId} setSelectedBatteryId={setSelectedBatteryId}
-                        checked={checked} setChecked={setChecked} 
-                        color={headerColor}/>
-                    </div>*/
 
 export default Results

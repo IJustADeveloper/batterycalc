@@ -12,6 +12,7 @@ const BattTimeForm = () => {
     const dispatch = useDispatch()
 
     const pickedBatteryNames = useSelector(state => state.battTime.pickedBatteryNames)
+    const batteryDepthOfDischargeValues = useSelector( state => state.shared.batteryDepthOfDischargeValues)
 
     const initialValues = useSelector(state => state.battTime.formValues) ?? {
         'powerS': '',
@@ -48,13 +49,13 @@ const BattTimeForm = () => {
     })
 
     const formFieldsParams = [
-        { id: 'powerS', label: 'S of load', units: 'kVA', inputParams: { className: 'number-input', type: 'number', step: 'any', onChange: formik.handleChange, value: formik.values.powerS} },
-        { id: 'cos_fi', label: 'cos(fi) of load', units: '-', inputParams: { className: 'number-input', type: 'number', step: '0.01', max: '1', onChange: formik.handleChange, value: formik.values.cos_fi} },
-        { id: 'powerP', label: 'P of load', units: 'kW', inputParams: { className: 'number-input', type: 'number', step: 'any', onChange: formik.handleChange, value: formik.values.powerP} },
-        { id: 'efficiency', label: 'Inverter efficiency', units: '%', inputParams: { className: 'number-input', type: 'number', max: '100', step: 'any', onChange: formik.handleChange, value: formik.values.efficiency} },
-        { id: 'bElements', label: 'Q of batteries (12V)', units: 'pcs', inputParams: { className: 'number-input', type: 'number', step: '1', onChange: formik.handleChange, value: formik.values.bElements} },
-        { id: 'groups', label: 'Q of strings', units: 'pcs', inputParams: { className: 'number-input', type: 'number', step: '1', onChange: formik.handleChange, value: formik.values.groups} },
-        { id: 'depth', label: 'Depth of discharge', units: 'V/cell', inputParams: { className: 'number-input', type: 'number', step: '0.01', max: '2', onChange: formik.handleChange, value: formik.values.depth} },
+        { id: 'powerS', label: 'S of load', units: 'kVA', fieldType: "input", fieldParams: { className: 'number-input', type: 'number', step: 'any', onChange: formik.handleChange, value: formik.values.powerS} },
+        { id: 'cos_fi', label: 'cos(fi) of load', units: '-', fieldType: "input", fieldParams: { className: 'number-input', type: 'number', step: '0.01', max: '1', onChange: formik.handleChange, value: formik.values.cos_fi} },
+        { id: 'powerP', label: 'P of load', units: 'kW', fieldType: "input", fieldParams: { className: 'number-input', type: 'number', step: 'any', onChange: formik.handleChange, value: formik.values.powerP} },
+        { id: 'efficiency', label: 'Inverter efficiency', units: '%', fieldType: "input", fieldParams: { className: 'number-input', type: 'number', max: '100', step: 'any', onChange: formik.handleChange, value: formik.values.efficiency} },
+        { id: 'bElements', label: 'Q of batteries (12V)', units: 'pcs', fieldType: "input", fieldParams: { className: 'number-input', type: 'number', step: '1', onChange: formik.handleChange, value: formik.values.bElements} },
+        { id: 'groups', label: 'Q of strings', units: 'pcs', fieldType: "input", fieldParams: { className: 'number-input', type: 'number', step: '1', onChange: formik.handleChange, value: formik.values.groups} },
+        { id: 'depth', label: 'Depth of discharge', units: 'V/cell', fieldType: "select", fieldParams: { className: 'number-select', onChange: formik.handleChange, value: formik.values.depth, options: batteryDepthOfDischargeValues} },
     ]
 
     const [calculatedFieldsParams, setCalculatedFieldsParams] = useState([

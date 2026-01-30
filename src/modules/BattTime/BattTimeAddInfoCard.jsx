@@ -15,8 +15,8 @@ const BattTimeAddInfoCard = () => {
     return (
         <AdditionalInfoCard
             additionalData={additionalData}
-            dischargeData={dischargeData}
-            selectedBatteryId={selectedBatteryId}
+            solutionData={dischargeData}
+            selectedSolutionId={selectedBatteryId}
             currencies={currencies}
             selectedCurrency={selectedCurrency}
             setSelectedCurrency={setSelectedCurrency}

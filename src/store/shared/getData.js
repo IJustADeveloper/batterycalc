@@ -1,6 +1,6 @@
 import { fetchCurrencies } from "../../api/currencies"
-import { fetchBatteryNames } from "../../api/batteries"
-import { loadCurrencies, updateCurrenciesStatus, loadBatteryNames, updateBatteryNamesStatus } from "./actionCreators"
+import { fetchBatteryDepthOfDischargValues, fetchBatteryNames } from "../../api/batteries"
+import { loadCurrencies, updateCurrenciesStatus, loadBatteryNames, updateBatteryNamesStatus, loadDepthOfDischargeValues, updateDepthOfDischargeValuesStatus } from "./actionCreators"
 
 import { updateSelectedCurrency as battSizeUpdateSelectedCurrency } from '../battSizeApp/battSizeActionCreators'
 import { updateSelectedCurrency as battTimeUpdateSelectedCurrency } from '../battTimeApp/battTimeActionCreators'
@@ -33,5 +33,19 @@ export const getBatteryNames = () => async (dispatch) => {
     }
     finally{
         dispatch(updateBatteryNamesStatus("success"))
+    }
+}
+
+export const getBatteryDepthOfDischargeValues = () => async (dispatch) => {
+    try {
+        dispatch(updateDepthOfDischargeValuesStatus("loading"))
+        const { data } = await fetchBatteryDepthOfDischargValues()
+        dispatch(loadDepthOfDischargeValues(data))
+    }
+    catch (error){
+        dispatch(updateDepthOfDischargeValuesStatus(error))
+    }
+    finally {
+        dispatch(updateDepthOfDischargeValuesStatus("success"))
     }
 }

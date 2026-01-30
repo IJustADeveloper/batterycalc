@@ -1,3 +1,11 @@
+import simpleFormInput from "./simpleFormInput";
+import simpleFormSelect from "./simpleFormSelect";
+
+const formFieldTemplates = {
+	"input": simpleFormInput,
+	"select": simpleFormSelect,
+}
+
 const Form = ({ formFieldsParams, calculatedFieldsParams, handleSubmit, handleChange, isSubmitting, headerNum = 1, headerColor = 'cyan' }) => {
 
 	async function preHandleSubmit(event) {
@@ -5,12 +13,18 @@ const Form = ({ formFieldsParams, calculatedFieldsParams, handleSubmit, handleCh
 		handleSubmit(event)
 	}
 
+
 	let formFields = formFieldsParams.map((params, i, a) => {
 		return (
 			<tr key={i}>
 				<td className='td-left'><label htmlFor={params.id}>{params.label}</label></td>
-				<td>[{params.units}]</td>
-				<td><input {...params.inputParams} id={params.id} name={params.id}></input></td>
+				<td>{params.units !== '' && `[${params.units}]`}</td>
+				<td>
+					<div className='form-field-cell'>
+						{params.fieldLabel && <label htmlFor={params.id}>{params.fieldLabel}</label>}
+						{formFieldTemplates[params.fieldType](params.fieldParams, params.id)}
+					</div>
+				</td>
 			</tr>
 		)
 	})

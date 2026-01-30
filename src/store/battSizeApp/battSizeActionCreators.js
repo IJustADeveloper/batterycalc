@@ -1,7 +1,7 @@
 import * as actionNames from './battSizeActionNames'
 
-export const loadDischargeData = (dischargeData) => {
-    return {type: actionNames.BATT_SIZE_DISCHARGE_DATA_LOAD, payload: dischargeData}
+export const loadSolutionData = (solutionData) => {
+    return {type: actionNames.BATT_SIZE_SOLUTION_DATA_LOAD, payload: solutionData}
 }
 
 export const loadGraphingData = (graphingData) => {
@@ -16,8 +16,8 @@ export const updateBatteryDataStatus = (batteryDataStatus) => {
     return {type: actionNames.BATT_SIZE_BATTERY_DATA_STATUS_UPDATE, payload: batteryDataStatus}
 }
 
-export const updateSelectedBatteryId = (selectedBatteryId) => {
-    return {type: actionNames.BATT_SIZE_SELECTED_BATTERY_ID_UPDATE, payload: selectedBatteryId}
+export const updateSelectedSolutionId = (selectedSolutionId) => {
+    return {type: actionNames.BATT_SIZE_SELECTED_SOLUTION_ID_UPDATE, payload: selectedSolutionId}
 }
 
 export const updateChecked = (checkedId) => {

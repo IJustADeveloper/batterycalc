@@ -1,13 +1,13 @@
 import * as actionNames from "./battSizeActionNames"
 
 const initialState = {
-    dischargeData: null,
+    solutionData: null,
     graphingData: null,
     additionalData: null,
 
     batteryDataStatus: null,
 
-    selectedBatteryId: null,
+    selectedSolutionId: null,
     checked: new Set(),
 
     selectedCurrency: null,
@@ -18,10 +18,10 @@ const initialState = {
 
 export default function battSizeReducer(state = initialState, action){
     switch (action.type){
-        case actionNames.BATT_SIZE_DISCHARGE_DATA_LOAD:{
+        case actionNames.BATT_SIZE_SOLUTION_DATA_LOAD:{
             return {
                 ...state,
-                dischargeData: action.payload
+                solutionData: action.payload
             }
         }
         case actionNames.BATT_SIZE_GRAPHING_DATA_LOAD:{
@@ -42,17 +42,17 @@ export default function battSizeReducer(state = initialState, action){
                 batteryDataStatus: action.payload
             }
         }
-        case actionNames.BATT_SIZE_SELECTED_BATTERY_ID_UPDATE:{
-            if (state.selectedBatteryId === action.payload){
+        case actionNames.BATT_SIZE_SELECTED_SOLUTION_ID_UPDATE:{
+            if (state.selectedSolutionId === action.payload){
                 return {
                     ...state,
-                    selectedBatteryId: null
+                    selectedSolutionId: null
                 }
             }
 
             return {
                 ...state,
-                selectedBatteryId: action.payload
+                selectedSolutionId: action.payload
             }
         }
         case actionNames.BATT_SIZE_CHECKED_UPDATE:{

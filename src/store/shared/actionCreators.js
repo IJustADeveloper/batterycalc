@@ -15,3 +15,11 @@ export const loadBatteryNames = (names) => {
 export const updateBatteryNamesStatus = (namesStatus) => {
     return {type: actionNames.SHARED_NAMES_STATUS_UPDATE, payload: namesStatus}
 }
+
+export const loadDepthOfDischargeValues = (depthOfDishargeValues) => {
+    return {type: actionNames.SHARED_DEPTH_OF_DISCHARGE_VALUES_LOAD, payload: depthOfDishargeValues}
+}
+
+export const updateDepthOfDischargeValuesStatus = (depthOfDishargeValuesStatus) => {
+    return {type: actionNames.SHARED_DEPTH_OF_DISCHARGE_VALUES_STATUS_UPDATE, payload: depthOfDishargeValuesStatus}
+}

@@ -1,6 +1,6 @@
 import { formatPrice, formatBatteryPrice } from "../utils/format"
 
-function AdditionalInfoCard({additionalData, dischargeData, selectedBatteryId, setSelectedCurrency, currencies=null, selectedCurrency=null, headerColor='maroon'}){
+function AdditionalInfoCard({additionalData, solutionData, selectedSolutionId, setSelectedCurrency, currencies=null, selectedCurrency=null, headerColor='maroon'}){
 
     const minOrNotNull = function(a, b){
         if (a === null) return b 
@@ -8,14 +8,14 @@ function AdditionalInfoCard({additionalData, dischargeData, selectedBatteryId, s
         return Math.min(a, b)
     }
 
-    const batteryAddtionalData = additionalData?.[selectedBatteryId] ?? null
-    const batteryDischargeData = dischargeData?.[selectedBatteryId] ?? null
+    const solution = solutionData?.[selectedSolutionId] ?? null
+    const batteryAddtionalData = additionalData?.[solution?.battery_id] ?? null
 
-    const totalBatteriesNumber = batteryDischargeData?.num_batteries_total ?? null
+    const totalBatteriesNumber = solution?.num_batteries_total ?? null
 
     const mass = totalBatteriesNumber && batteryAddtionalData?.weight ? (batteryAddtionalData.weight * totalBatteriesNumber).toFixed(1) :  '-'
     const volume = totalBatteriesNumber && batteryAddtionalData?.length && batteryAddtionalData?.width && (batteryAddtionalData?.height || batteryAddtionalData?.max_height) ? (batteryAddtionalData.width * batteryAddtionalData.length * minOrNotNull(batteryAddtionalData.height, batteryAddtionalData.max_height) * totalBatteriesNumber / 1000000000).toFixed(3) :  '-'
-    const formattedPriceObject = batteryDischargeData?.price ? formatBatteryPrice(batteryDischargeData.price, currencies, selectedCurrency) : null
+    const formattedPriceObject = solution?.price ? formatBatteryPrice(solution.price, currencies, selectedCurrency) : null
     const price = formattedPriceObject ? (formattedPriceObject.price_min ? formatPrice(formattedPriceObject.price_min) : formattedPriceObject.alt_price ) : '-'
     
     const currencyOptions = Object.values(currencies ?? {}).map((c)=> <option value={c.currency} key={c.currency}>{c.currency}</option>)
@@ -103,7 +103,7 @@ function AdditionalInfoCard({additionalData, dischargeData, selectedBatteryId, s
                         </div>
 
                         <div className='button-container'>
-                            <button className='datasheet-link-button' disabled={batteryAddtionalData?.docs_link ? true : false} onClick={() => {if (batteryAddtionalData?.docs_link){window.open(batteryAddtionalData.docs_link, '_blank')}}}>
+                            <button className='datasheet-link-button' disabled={batteryAddtionalData?.docs_link ? false : true} onClick={() => {if (batteryAddtionalData?.docs_link){window.open(batteryAddtionalData.docs_link, '_blank')}}}>
                                 <div>Datasheet</div> 
                                 <img src='assets/datasheet-link-button.svg' alt='' width='18px' height='18px'/>
                             </button>

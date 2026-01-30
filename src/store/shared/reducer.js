@@ -1,3 +1,4 @@
+import { loadDepthOfDischargeValues } from "./actionCreators"
 import * as actionNames from "./actionNames"
 
 const initialState = {
@@ -6,6 +7,9 @@ const initialState = {
 
     batteryNames: null,
     batteryNamesStatus: null,
+
+    batteryDepthOfDischargeValues: null,
+    batteryDepthOfDischargeValuesStatus: null,
 }
 
 
@@ -33,6 +37,18 @@ export default function sharedReducer(state = initialState, action){
             return {
                 ...state,
                 batteryNamesStatus: action.payload
+            }
+        }
+        case actionNames.SHARED_DEPTH_OF_DISCHARGE_VALUES_LOAD: {
+            return {
+                ...state,
+                batteryDepthOfDischargeValues: action.payload
+            }
+        }
+        case actionNames.SHARED_DEPTH_OF_DISCHARGE_VALUES_STATUS_UPDATE: {
+            return {
+                ...state,
+                batteryDepthOfDischargeValuesStatus: action.payload
             }
         }
         default:{

@@ -53,8 +53,8 @@ const BattTimeResultsTable = () => {
             columnNames={columnNames}
             columnClasses = {columnClasses}
             columnSorts={columnSorts} 
-            selectedBatteryId={selectedBatteryId} 
-            setSelectedBatteryId={setSelectedBatteryId} 
+            selectedRowId={selectedBatteryId} 
+            setSelectedRowId={setSelectedBatteryId} 
             checked={checked} 
             setChecked={setChecked} 
             preSortFormat={preSortFormat}

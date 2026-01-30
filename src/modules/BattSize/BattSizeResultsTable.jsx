@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux"
-import { updateSelectedBatteryId, updateChecked } from "../../store/battSizeApp/battSizeActionCreators";
+import { updateSelectedSolutionId, updateChecked } from "../../store/battSizeApp/battSizeActionCreators";
 
 import { defaultSort, priceSort } from "../../utils/Sorts";
 import { formatNumbers, formatMargin, formatTimeFromMinutes, formatBatteryPrice, formatPrice } from "../../utils/format";
@@ -11,28 +11,28 @@ const BattSizeResultsTable = () => {
     const dispatch = useDispatch()
 
     const { currencies } = useSelector(state => state.shared)
-    const { dischargeData, checked, selectedBatteryId, selectedCurrency } = useSelector(state => state.battSize)
+    const { solutionData, checked, selectedSolutionId, selectedCurrency } = useSelector(state => state.battSize)
     
     const columnNames = ['Brand', 'Model', 't BOL', 't EOL', 'Q / string', 'Strings', 'Total', 'Margin', 'Sum '+ currencies[selectedCurrency].currency]
     const columnClasses = {'vendor': 'td-left', 'series': 'td-left','model': 'td-left', 'battery_id': 'hide-td'}
 	const columnSorts = [defaultSort, defaultSort, defaultSort, defaultSort, defaultSort, defaultSort, defaultSort, defaultSort, priceSort]
 
-    const setSelectedBatteryId = (batteryId) => {dispatch(updateSelectedBatteryId(batteryId))}
+    const setSelectedSolutionId = (solutionId) => {dispatch(updateSelectedSolutionId(solutionId))}
     const setChecked = (batteryId) => {dispatch(updateChecked(batteryId))}
 
     const preSortFormat = (entries) => {
         entries = structuredClone(entries)
-        entries = entries.map(([b_id, row]) => {
+        entries = entries.map(([r_id, row]) => { 
             row.price = formatBatteryPrice(row.price, currencies, selectedCurrency)
             row.price.currency = selectedCurrency
-            return [b_id, row]
+            return [r_id, row]
         })
         return entries
     }
 
     const format = (entries) => {
         entries = structuredClone(entries)
-        entries = entries.map(([b_id, row]) => {
+        entries = entries.map(([r_id, row]) => {
             for (let [key, value] of Object.entries(row)){
                 if (typeof value == 'number' && !Number.isInteger(value)){
                     row[key] = formatNumbers(value)
@@ -44,7 +44,7 @@ const BattSizeResultsTable = () => {
             row.discharge_time_end_life = formatTimeFromMinutes(row.discharge_time_end_life)
             row.price = row.price.price_min ? formatPrice(row.price.price_min) : row.price.alt_price
 
-            return [b_id, row]
+            return [r_id, row]
         })
 
         return entries
@@ -52,12 +52,12 @@ const BattSizeResultsTable = () => {
 
     return (
         <Table 
-            data={dischargeData !== null && dischargeData} 
+            data={solutionData !== null && solutionData} 
             columnNames={columnNames}
             columnClasses = {columnClasses}
             columnSorts={columnSorts} 
-            selectedBatteryId={selectedBatteryId} 
-            setSelectedBatteryId={setSelectedBatteryId} 
+            selectedRowId={selectedSolutionId} 
+            setSelectedRowId={setSelectedSolutionId} 
             checked={checked} 
             setChecked={setChecked} 
             preSortFormat={preSortFormat}

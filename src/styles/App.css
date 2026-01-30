@@ -129,7 +129,7 @@
 
 .data-entry-table tr td:nth-child(2){
   padding: 0 30px 0 20px;
-  flex: 1;
+  flex: 0.95;
 }
 
 .data-entry-table tr td:nth-child(3){
@@ -140,9 +140,28 @@
   height: 30px;
 }
 
+.form-field-cell{
+  display: flex;
+  gap: 8px;
+  width: 138px;
+  min-width: 0;
+}
 
-.data-entry-table input{
-  width: 128px;
+.data-entry-table .number-input{
+  min-width: 0;
+  flex: 1 1 136px;  
+  height: 21px;
+  box-sizing: border-box;
+}
+
+.data-entry-table .number-select {
+  width: 136px;
+  min-height: 21px;
+  box-sizing: border-box;
+}
+
+.number-select div {
+  max-height: 100px;
 }
 
 .data-entry-power-container{
@@ -693,10 +712,6 @@
 
 .td-left{
   text-align: left;
-}
-
-.number-input{
-  width: 70px;
 }
 
 .horizontal-scroll{

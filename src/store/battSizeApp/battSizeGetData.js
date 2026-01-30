@@ -1,11 +1,11 @@
 import { fetchBatteryData } from "../../api/batteries"
-import { loadDischargeData, loadGraphingData, updateBatteryDataStatus, loadAdditionalData } from "./battSizeActionCreators"
+import { loadSolutionData, loadGraphingData, updateBatteryDataStatus, loadAdditionalData } from "./battSizeActionCreators"
 
 export const getBatteryData = (params) => async (dispatch) => {
     try {
         dispatch(updateBatteryDataStatus("loading"))
         const {data, graphing, adinfo} = await fetchBatteryData(params)
-        dispatch(loadDischargeData(data))
+        dispatch(loadSolutionData(data))
         dispatch(loadGraphingData(graphing))
         dispatch(loadAdditionalData(adinfo))
     }

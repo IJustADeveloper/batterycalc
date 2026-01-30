@@ -7,7 +7,7 @@ import BatterySizeApp from './pages/BatterySizeApp'
 import BatteryTimeApp from './pages/BatteryTimeApp'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { getCurrencies, getBatteryNames } from './store/shared/getData'
+import { getCurrencies, getBatteryNames, getBatteryDepthOfDischargeValues } from './store/shared/getData'
 
 
 function BattsizeNavbarItem({ isChosen }) {
@@ -59,13 +59,14 @@ function BatttimeNavbarItem({ isChosen }) {
 const loadData = (dispatch) => {
     dispatch(getCurrencies())
     dispatch(getBatteryNames())
+    dispatch(getBatteryDepthOfDischargeValues())
 }
 
 const App = () => {
     const location = useLocation()
     const dispatch = useDispatch()
 
-    const {currenciesStatus, batteryNamesStatus} = useSelector(state => state.shared)
+    const {currenciesStatus, batteryNamesStatus, batteryDepthOfDischargeValuesStatus} = useSelector(state => state.shared)
 
     useEffect(()=>{ loadData(dispatch) }, [])
 
@@ -76,7 +77,7 @@ const App = () => {
                     <BattsizeNavbarItem isChosen={location.pathname === "/batterysize/"} />
                     <BatttimeNavbarItem isChosen={location.pathname === "/batterytime/"} />
                 </div>
-                { (currenciesStatus === 'success' && batteryNamesStatus === 'success') &&
+                { (currenciesStatus === 'success' && batteryNamesStatus === 'success' && batteryDepthOfDischargeValuesStatus === 'success') &&
                     <div className='page'>
                         <Routes>
                             <Route path='/batterysize/' Component={BatterySizeApp} />

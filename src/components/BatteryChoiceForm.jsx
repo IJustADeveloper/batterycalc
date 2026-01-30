@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import MultipleChoiceWithHeaders from './MultipleChoiceWithHeaders.jsx';
+import getShowingVendorSeriesModels from '../utils/getShowingVendorsSeriesModels.js';
 
 function BatteryChoiceForm({ names, pickedNames, setPickedNames, headerNum = 1, headerColor = 'maroon' }) {
 
@@ -15,26 +16,8 @@ function BatteryChoiceForm({ names, pickedNames, setPickedNames, headerNum = 1, 
     }
 
     useEffect(() => {
-        let preShowingVendors = {'Brands': {}}
-        Object.keys(names).forEach(vendorName => {
-            preShowingVendors['Brands'][vendorName] = vendorName in pickedNames
-        })
 
-        let preShowingSeries = {}
-        let preShowingModels = {}
-        Object.keys(pickedNames).forEach(vendorName => {
-            preShowingSeries[vendorName] = {}
-            Object.keys(names[vendorName]).forEach(seriesName => {
-                preShowingSeries[vendorName][seriesName] = seriesName in pickedNames[vendorName]
-            })
-
-            Object.keys(pickedNames[vendorName]).forEach(seriesName =>{
-                preShowingModels[`${vendorName}/${seriesName}`] = {}
-                names[vendorName][seriesName].forEach(modelName => {
-                    preShowingModels[`${vendorName}/${seriesName}`][modelName] = modelName in pickedNames[vendorName][seriesName]
-                })
-            })
-        }) 
+        const [preShowingVendors, preShowingSeries, preShowingModels] = getShowingVendorSeriesModels(names, pickedNames)
 
         setShowingVendors(preShowingVendors)
         setShowingSeries(preShowingSeries)
